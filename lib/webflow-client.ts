@@ -9,7 +9,12 @@ import type {
   WebflowSite, 
   WebflowCollection, 
   WebflowUser,
-  ApiKeyValidationResult 
+  ApiKeyValidationResult,
+  WebflowCmsItem,
+  WebflowCmsCreateRequest,
+  WebflowCmsUpdateRequest,
+  WebflowCmsListOptions,
+  WebflowCmsListResponse
 } from './types/webflow'
 
 export class WebflowClient {
@@ -121,6 +126,77 @@ export class WebflowClient {
 
   async getSite(siteId: string): Promise<WebflowApiResponse<WebflowSite>> {
     return this.request<WebflowSite>(`/sites/${siteId}`)
+  }
+
+  // CMS Methods
+  async getCmsItems(
+    collectionId: string, 
+    options: WebflowCmsListOptions = {}
+  ): Promise<WebflowApiResponse<WebflowCmsListResponse>> {
+    const params = new URLSearchParams()
+    
+    if (options.limit) params.append('limit', options.limit.toString())
+    if (options.offset) params.append('offset', options.offset.toString())
+    if (options.sort) {
+      options.sort.forEach(sortField => params.append('sort', sortField))
+    }
+    if (options.filter) {
+      Object.entries(options.filter).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(`filter[${key}]`, String(value))
+        }
+      })
+    }
+
+    const queryString = params.toString()
+    const endpoint = `/collections/${collectionId}/items${queryString ? `?${queryString}` : ''}`
+    
+    return this.request<WebflowCmsListResponse>(endpoint)
+  }
+
+  async getCmsItem(
+    collectionId: string, 
+    itemId: string
+  ): Promise<WebflowApiResponse<WebflowCmsItem>> {
+    return this.request<WebflowCmsItem>(`/collections/${collectionId}/items/${itemId}`)
+  }
+
+  async createCmsItem(
+    collectionId: string, 
+    data: WebflowCmsCreateRequest
+  ): Promise<WebflowApiResponse<WebflowCmsItem>> {
+    return this.request<WebflowCmsItem>(`/collections/${collectionId}/items`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async updateCmsItem(
+    collectionId: string, 
+    itemId: string, 
+    data: WebflowCmsUpdateRequest
+  ): Promise<WebflowApiResponse<WebflowCmsItem>> {
+    return this.request<WebflowCmsItem>(`/collections/${collectionId}/items/${itemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteCmsItem(
+    collectionId: string, 
+    itemId: string
+  ): Promise<WebflowApiResponse<void>> {
+    return this.request<void>(`/collections/${collectionId}/items/${itemId}`, {
+      method: 'DELETE',
+    })
+  }
+
+  async publishSite(siteId: string, domains?: string[]): Promise<WebflowApiResponse<any>> {
+    const publishData = domains ? { domains } : {}
+    return this.request(`/sites/${siteId}/publish`, {
+      method: 'POST',
+      body: JSON.stringify(publishData),
+    })
   }
 }
 

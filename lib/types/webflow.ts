@@ -59,3 +59,49 @@ export interface ApiKeyValidationResult {
   sites?: WebflowSite[]
   error?: string
 }
+
+// CMS Item Types
+export interface WebflowCmsItem {
+  id: string
+  cmsLocaleId?: string
+  lastPublished?: string
+  lastUpdated: string
+  createdOn: string
+  publishedOn?: string
+  isArchived: boolean
+  isDraft: boolean
+  fieldData: Record<string, any>
+}
+
+export interface WebflowCmsCreateRequest {
+  isArchived?: boolean
+  isDraft?: boolean
+  fieldData: Record<string, any>
+}
+
+export interface WebflowCmsUpdateRequest {
+  id: string
+  isArchived?: boolean
+  isDraft?: boolean
+  fieldData?: Record<string, any>
+}
+
+// Pagination and Filtering
+export interface WebflowPaginationOptions {
+  limit?: number
+  offset?: number
+}
+
+export interface WebflowCmsListOptions extends WebflowPaginationOptions {
+  filter?: Record<string, any>
+  sort?: string[]
+}
+
+export interface WebflowCmsListResponse {
+  items: WebflowCmsItem[]
+  pagination: {
+    limit: number
+    offset: number
+    total: number
+  }
+}
