@@ -39,17 +39,17 @@ export class ErrorLogger {
     maxLocalLogs: 100,
     reportToConsole: true,
     reportToRemote: false,
-    sensitiveFields: ['apiKey', 'password', 'token', 'secret']
+    sensitiveFields: ['apiKey', 'password', 'token', 'secret'],
   }
 
   private constructor() {
     if (typeof window !== 'undefined') {
       // Initialize session ID
       this.sessionId = this.generateSessionId()
-      
+
       // Load configuration from environment or localStorage
       this.loadConfig()
-      
+
       // Set up error event listeners
       this.setupGlobalErrorHandlers()
     }
@@ -142,7 +142,7 @@ export class ErrorLogger {
    * Get logs by level
    */
   public getLogsByLevel(level: LogEntry['level']): LogEntry[] {
-    return this.logs.filter(log => log.level === level)
+    return this.logs.filter((log) => log.level === level)
   }
 
   /**
@@ -181,7 +181,7 @@ export class ErrorLogger {
       stack: error?.stack,
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
       url: typeof window !== 'undefined' ? window.location.href : undefined,
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     }
   }
 
@@ -210,7 +210,6 @@ export class ErrorLogger {
    * Log to console with proper formatting
    */
   private logToConsole(logEntry: LogEntry): void {
-    const style = this.getConsoleStyle(logEntry.level)
     const prefix = `[FlowPilot ${logEntry.level.toUpperCase()}]`
 
     switch (logEntry.level) {
@@ -218,25 +217,25 @@ export class ErrorLogger {
         console.error(`${prefix} ${logEntry.message}`, {
           error: logEntry.error,
           context: logEntry.context,
-          timestamp: logEntry.timestamp
+          timestamp: logEntry.timestamp,
         })
         break
       case 'warn':
         console.warn(`${prefix} ${logEntry.message}`, {
           context: logEntry.context,
-          timestamp: logEntry.timestamp
+          timestamp: logEntry.timestamp,
         })
         break
       case 'info':
         console.info(`${prefix} ${logEntry.message}`, {
           context: logEntry.context,
-          timestamp: logEntry.timestamp
+          timestamp: logEntry.timestamp,
         })
         break
       case 'debug':
         console.debug(`${prefix} ${logEntry.message}`, {
           context: logEntry.context,
-          timestamp: logEntry.timestamp
+          timestamp: logEntry.timestamp,
         })
         break
     }
@@ -270,9 +269,9 @@ export class ErrorLogger {
       await fetch(this.config.remoteEndpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(logEntry)
+        body: JSON.stringify(logEntry),
       })
     } catch {
       // Ignore remote logging errors to prevent infinite loops
@@ -284,12 +283,10 @@ export class ErrorLogger {
    */
   private sanitizeError(error: AppError): Partial<AppError> {
     const sanitized = { ...error.toJSON() }
-    
+
     // Remove sensitive data from context
     if (sanitized.context?.additionalData) {
-      sanitized.context.additionalData = this.sanitizeContext(
-        sanitized.context.additionalData
-      )
+      sanitized.context.additionalData = this.sanitizeContext(sanitized.context.additionalData)
     }
 
     return sanitized
@@ -302,14 +299,14 @@ export class ErrorLogger {
     const sanitized = { ...context }
 
     // Remove sensitive fields
-    this.config.sensitiveFields.forEach(field => {
+    this.config.sensitiveFields.forEach((field) => {
       if (field in sanitized) {
         sanitized[field] = '[REDACTED]'
       }
     })
 
     // Recursively sanitize nested objects
-    Object.keys(sanitized).forEach(key => {
+    Object.keys(sanitized).forEach((key) => {
       if (typeof sanitized[key] === 'object' && sanitized[key] !== null) {
         sanitized[key] = this.sanitizeContext(sanitized[key] as Record<string, unknown>)
       }
@@ -357,11 +354,11 @@ export class ErrorLogger {
           severity: 'high' as ErrorSeverity,
           recoverable: false,
           retryable: false,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         } as AppError,
         {
           type: 'unhandledrejection',
-          reason: event.reason
+          reason: event.reason,
         }
       )
     })
@@ -377,13 +374,13 @@ export class ErrorLogger {
           recoverable: true,
           retryable: false,
           timestamp: new Date().toISOString(),
-          stack: event.error?.stack
+          stack: event.error?.stack,
         } as AppError,
         {
           type: 'javascript',
           filename: event.filename,
           lineno: event.lineno,
-          colno: event.colno
+          colno: event.colno,
         }
       )
     })

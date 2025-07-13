@@ -76,6 +76,12 @@ const eslintConfig = [
       'no-console': 'off',
     },
   },
+  {
+    files: ['lib/errors/**/*.ts', 'lib/env.ts', 'lib/auth/token-storage.ts', 'lib/permissions/checker.ts'],
+    rules: {
+      'no-console': 'off', // Legitimate logging in utility/error handling files
+    },
+  },
 ];
 
 export default eslintConfig;

@@ -1,6 +1,6 @@
 /**
  * Secure Token Storage
- * Handles secure storage of API keys using HTTP-only cookies (preferred) 
+ * Handles secure storage of API keys using HTTP-only cookies (preferred)
  * or encrypted localStorage (fallback)
  */
 
@@ -47,9 +47,9 @@ export const TokenStorage = {
     try {
       // Try to use HTTP-only cookies first (more secure)
       Cookies.set(COOKIE_NAME, token, COOKIE_OPTIONS)
-    } catch (error) {
+    } catch {
       console.warn('Cookie storage failed, using encrypted localStorage fallback')
-      
+
       // Fallback to encrypted localStorage
       if (typeof window !== 'undefined' && env.ENCRYPTION_KEY) {
         const encrypted = encrypt(token)
@@ -93,7 +93,7 @@ export const TokenStorage = {
     try {
       // Remove from cookies
       Cookies.remove(COOKIE_NAME)
-      
+
       // Remove from localStorage
       if (typeof window !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY)
