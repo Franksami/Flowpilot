@@ -36,7 +36,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useCmsData } from '@/lib/hooks/useCmsData'
-import { useAppStore } from '@/lib/store'
+import { useAppStore, type OptimisticOperation } from '@/lib/store'
 import type { WebflowCollection, WebflowField, WebflowCmsItem } from '@/lib/types/webflow'
 
 import { CmsItemDialog } from './cms-item-dialog'
@@ -82,7 +82,7 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
   // Helper to check if item has pending operations
   const getItemOperationStatus = (itemId: string) => {
     const operation = optimisticOperations.find(
-      (op) => op.itemId === itemId || op.item?.id === itemId
+      (op: OptimisticOperation) => op.itemId === itemId || op.item?.id === itemId
     )
     return operation ? operation.type : null
   }
