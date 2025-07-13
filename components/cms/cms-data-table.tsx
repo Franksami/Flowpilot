@@ -17,9 +17,10 @@ import {
   MoreHorizontal,
   Loader2,
 } from 'lucide-react'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,9 +37,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useCmsData } from '@/lib/hooks/useCmsData'
+import { useSelection } from '@/lib/hooks/useSelection'
 import { useAppStore, type OptimisticOperation } from '@/lib/store'
 import type { WebflowCollection, WebflowField, WebflowCmsItem } from '@/lib/types/webflow'
 
+import { BulkActionToolbar } from './bulk-action-toolbar'
 import { CmsItemDialog } from './cms-item-dialog'
 
 interface CmsDataTableProps {
@@ -62,6 +65,7 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
     createItem,
     updateItem,
     deleteItem,
+    bulkDeleteItems,
     handlePageChange,
     handlePageSizeChange,
     handleSearch,
@@ -72,6 +76,20 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
 
   const [searchQuery, setSearchQuery] = useState('')
   const [sortConfig, setSortConfig] = useState<SortConfig>(null)
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null)
+
+  // Selection management
+  const {
+    selectedItemIds,
+    selectionCount,
+    isSelected,
+    handleToggleItem,
+    handleSelectAll,
+    handleClearSelection,
+    handleRangeSelection,
+    areAllItemsSelected,
+    areSomeItemsSelected,
+  } = useSelection(collection.id)
 
   // Initialize collection data on mount
   useEffect(() => {
@@ -188,6 +206,44 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
     )
   }
 
+  // Handle checkbox click with shift key support
+  const handleCheckboxClick = useCallback(
+    (itemId: string, event: React.MouseEvent) => {
+      if (event.shiftKey && lastSelectedId && lastSelectedId !== itemId) {
+        // Range selection
+        handleRangeSelection(lastSelectedId, itemId, paginatedItems)
+      } else {
+        // Single selection
+        handleToggleItem(itemId)
+      }
+      setLastSelectedId(itemId)
+    },
+    [lastSelectedId, paginatedItems, handleRangeSelection, handleToggleItem]
+  )
+
+  // Handle select all checkbox
+  const handleSelectAllChange = useCallback(() => {
+    if (areAllItemsSelected(paginatedItems)) {
+      handleClearSelection()
+    } else {
+      handleSelectAll(paginatedItems)
+    }
+  }, [paginatedItems, areAllItemsSelected, handleClearSelection, handleSelectAll])
+
+  // Bulk action handlers
+  const handleBulkDelete = useCallback(async () => {
+    try {
+      await bulkDeleteItems(selectedItemIds)
+      handleClearSelection()
+    } catch {
+      // Error will be displayed by the error state in the component
+    }
+  }, [selectedItemIds, bulkDeleteItems, handleClearSelection])
+
+  const handleBulkEdit = useCallback(() => {
+    // TODO: Open bulk edit dialog
+  }, [])
+
   return (
     <div className='space-y-4'>
       {/* Error Display */}
@@ -215,9 +271,13 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
             />
           </div>
           <div className='text-muted-foreground text-sm'>
-            {searchQuery
-              ? `${filteredItems.length} of ${pagination.totalItems} items`
-              : `${pagination.totalItems} total items`}
+            {selectionCount > 0 ? (
+              <span className='text-foreground font-medium'>{selectionCount} selected</span>
+            ) : searchQuery ? (
+              `${filteredItems.length} of ${pagination.totalItems} items`
+            ) : (
+              `${pagination.totalItems} total items`
+            )}
           </div>
         </div>
 
@@ -248,6 +308,14 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className='w-12'>
+                  <Checkbox
+                    checked={areAllItemsSelected(paginatedItems)}
+                    indeterminate={areSomeItemsSelected(paginatedItems)}
+                    onCheckedChange={handleSelectAllChange}
+                    aria-label='Select all items'
+                  />
+                </TableHead>
                 <TableHead className='w-20'>Status</TableHead>
                 {visibleFields.map((field) => (
                   <TableHead key={field.slug} className='min-w-32'>
@@ -268,14 +336,14 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={visibleFields.length + 3} className='py-8 text-center'>
+                  <TableCell colSpan={visibleFields.length + 4} className='py-8 text-center'>
                     Loading...
                   </TableCell>
                 </TableRow>
               ) : paginatedItems.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={visibleFields.length + 3}
+                    colSpan={visibleFields.length + 4}
                     className='text-muted-foreground py-8 text-center'
                   >
                     {searchQuery ? 'No items match your search' : 'No items found'}
@@ -289,8 +357,19 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
                   return (
                     <TableRow
                       key={item.id}
-                      className={operationStatus ? 'opacity-75 transition-opacity' : ''}
+                      className={`${operationStatus ? 'opacity-75' : ''} ${
+                        isSelected(item.id) ? 'bg-muted/50' : ''
+                      } transition-all`}
                     >
+                      <TableCell>
+                        <Checkbox
+                          checked={isSelected(item.id)}
+                          onCheckedChange={() => handleToggleItem(item.id)}
+                          onClick={(e) => handleCheckboxClick(item.id, e)}
+                          aria-label={`Select ${item.name || item.slug || 'item'}`}
+                          disabled={operationStatus !== null}
+                        />
+                      </TableCell>
                       <TableCell>
                         <div className='flex flex-wrap gap-1'>
                           {/* Operation Status Indicators */}
@@ -456,6 +535,16 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
           </Button>
         </div>
       </div>
+
+      {/* Bulk Action Toolbar */}
+      <BulkActionToolbar
+        collection={collection}
+        selectedCount={selectionCount}
+        totalCount={pagination.totalItems}
+        onDelete={handleBulkDelete}
+        onEdit={selectionCount > 0 ? handleBulkEdit : undefined}
+        onClearSelection={handleClearSelection}
+      />
     </div>
   )
 }

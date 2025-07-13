@@ -5,10 +5,16 @@
 
 import { useCallback } from 'react'
 
-import { getCmsItems, createCmsItem, deleteCmsItem } from '@/lib/actions/webflow-actions'
+import {
+  getCmsItems,
+  createCmsItem,
+  deleteCmsItem,
+  bulkDeleteCmsItems,
+} from '@/lib/actions/webflow-actions'
 import { updateCmsItem as updateCmsItemAction } from '@/lib/actions/webflow-actions'
 import { errorHandler } from '@/lib/errors/handler'
 import { useCmsCollection, useCmsOperations } from '@/lib/store'
+import type { OptimisticOperation } from '@/lib/store/types'
 import type { WebflowCollection, WebflowCmsItem } from '@/lib/types/webflow'
 
 /**
@@ -24,14 +30,11 @@ export function useCmsData(collection: WebflowCollection, apiKey: string | null)
     setCmsItems,
     setLoading,
     setError,
-    setPagination
+    setPagination,
   } = useCmsCollection(collection.id)
 
-  const {
-    optimisticOperations,
-    addOptimisticOperation,
-    removeOptimisticOperation
-  } = useCmsOperations()
+  const { optimisticOperations, addOptimisticOperation, removeOptimisticOperation } =
+    useCmsOperations()
 
   // Initialize collection if not already done
   const initializeIfNeeded = useCallback(() => {
@@ -41,231 +44,326 @@ export function useCmsData(collection: WebflowCollection, apiKey: string | null)
   }, [isInitialized])
 
   // Fetch CMS items with retry and error handling
-  const fetchItems = useCallback(async (
-    page?: number,
-    pageSize?: number,
-    searchQuery?: string,
-    sortField?: string,
-    sortDirection?: 'asc' | 'desc'
-  ) => {
-    if (!apiKey) return
+  const fetchItems = useCallback(
+    async (
+      page?: number,
+      pageSize?: number,
+      searchQuery?: string,
+      sortField?: string,
+      sortDirection?: 'asc' | 'desc'
+    ) => {
+      if (!apiKey) return
 
-    const currentPage = page ?? pagination.currentPage
-    const currentPageSize = pageSize ?? pagination.pageSize
-    const currentSearch = searchQuery ?? pagination.searchQuery
-    const currentSort = sortField ?? pagination.sortConfig?.field
-    const currentDirection = sortDirection ?? pagination.sortConfig?.direction
+      const currentPage = page ?? pagination.currentPage
+      const currentPageSize = pageSize ?? pagination.pageSize
+      const currentSearch = searchQuery ?? pagination.searchQuery
+      const currentSort = sortField ?? pagination.sortConfig?.field
+      const currentDirection = sortDirection ?? pagination.sortConfig?.direction
 
-    setLoading(true)
-    setError(null)
+      setLoading(true)
+      setError(null)
 
-    try {
-      const options = {
-        limit: currentPageSize,
-        offset: (currentPage - 1) * currentPageSize,
-        ...(currentSort && { sort: [`${currentSort}:${currentDirection || 'asc'}`] })
-      }
+      try {
+        const options = {
+          limit: currentPageSize,
+          offset: (currentPage - 1) * currentPageSize,
+          ...(currentSort && { sort: [`${currentSort}:${currentDirection || 'asc'}`] }),
+        }
 
-      const response = await errorHandler.withRetry(
-        async () => {
-          const result = await getCmsItems(apiKey, collection.id, options)
-          if (!result.success) {
-            throw new Error(result.error || 'Failed to fetch CMS items')
-          }
-          return result
-        },
-        `fetch-cms-items-${collection.id}-${currentPage}`,
-        { maxAttempts: 3, baseDelay: 1000 }
-      )
+        const response = await errorHandler.withRetry(
+          async () => {
+            const result = await getCmsItems(apiKey, collection.id, options)
+            if (!result.success) {
+              throw new Error(result.error || 'Failed to fetch CMS items')
+            }
+            return result
+          },
+          `fetch-cms-items-${collection.id}-${currentPage}`,
+          { maxAttempts: 3, baseDelay: 1000 }
+        )
 
-      if (response.data) {
-        setCmsItems(response.data.items, response.data.pagination.total)
-        setPagination({
-          currentPage,
-          pageSize: currentPageSize,
-          totalItems: response.data.pagination.total,
-          searchQuery: currentSearch,
-          sortConfig: currentSort ? { field: currentSort, direction: currentDirection || 'asc' } : null
+        if (response.data) {
+          setCmsItems(response.data.items, response.data.pagination.total)
+          setPagination({
+            currentPage,
+            pageSize: currentPageSize,
+            totalItems: response.data.pagination.total,
+            searchQuery: currentSearch,
+            sortConfig: currentSort
+              ? { field: currentSort, direction: currentDirection || 'asc' }
+              : null,
+          })
+        }
+      } catch (err) {
+        const appError = errorHandler.handleError(err, {
+          context: errorHandler.createContext({
+            operation: 'fetchCmsItems',
+            collectionId: collection.id,
+            additionalData: { page: currentPage, pageSize: currentPageSize },
+          }),
         })
+        setError(appError.userMessage)
+      } finally {
+        setLoading(false)
       }
-    } catch (err) {
-      const appError = errorHandler.handleError(err, {
-        context: errorHandler.createContext({
-          operation: 'fetchCmsItems',
-          collectionId: collection.id,
-          additionalData: { page: currentPage, pageSize: currentPageSize }
-        })
-      })
-      setError(appError.userMessage)
-    } finally {
-      setLoading(false)
-    }
-  }, [apiKey, collection.id, pagination, setCmsItems, setLoading, setError, setPagination])
+    },
+    [apiKey, collection.id, pagination, setCmsItems, setLoading, setError, setPagination]
+  )
 
   // Create item with optimistic updates
-  const createItem = useCallback(async (data: Record<string, unknown>) => {
-    if (!apiKey) return
+  const createItem = useCallback(
+    async (data: Record<string, unknown>) => {
+      if (!apiKey) return
 
-    const operationId = `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const optimisticItem: WebflowCmsItem = {
-      id: operationId,
-      cid: operationId,
-      createdOn: new Date().toISOString(),
-      lastUpdated: new Date().toISOString(),
-      lastPublished: null,
-      isDraft: true,
-      isArchived: false,
-      fieldData: data as Record<string, unknown>
-    }
-
-    // Add optimistic operation
-    addOptimisticOperation({
-      id: operationId,
-      type: 'create',
-      collectionId: collection.id,
-      item: optimisticItem,
-      timestamp: new Date().toISOString()
-    })
-
-    try {
-      const response = await createCmsItem(apiKey, collection.id, { fieldData: data })
-      
-      if (response.success) {
-        // Remove optimistic operation and refresh data
-        removeOptimisticOperation(operationId)
-        await fetchItems()
-      } else {
-        // Remove optimistic operation on failure
-        removeOptimisticOperation(operationId)
-        throw new Error(response.error || 'Failed to create item')
+      const operationId = `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const optimisticItem: WebflowCmsItem = {
+        id: operationId,
+        cid: operationId,
+        createdOn: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+        lastPublished: null,
+        isDraft: true,
+        isArchived: false,
+        fieldData: data as Record<string, unknown>,
       }
-    } catch (err) {
-      // Remove optimistic operation on error
-      removeOptimisticOperation(operationId)
-      throw errorHandler.handleError(err, {
-        context: errorHandler.createContext({
-          operation: 'createCmsItem',
-          collectionId: collection.id
-        })
+
+      // Add optimistic operation
+      addOptimisticOperation({
+        id: operationId,
+        type: 'create',
+        collectionId: collection.id,
+        item: optimisticItem,
+        timestamp: new Date().toISOString(),
       })
-    }
-  }, [apiKey, collection.id, addOptimisticOperation, removeOptimisticOperation, fetchItems])
+
+      try {
+        const response = await createCmsItem(apiKey, collection.id, { fieldData: data })
+
+        if (response.success) {
+          // Remove optimistic operation and refresh data
+          removeOptimisticOperation(operationId)
+          await fetchItems()
+        } else {
+          // Remove optimistic operation on failure
+          removeOptimisticOperation(operationId)
+          throw new Error(response.error || 'Failed to create item')
+        }
+      } catch (err) {
+        // Remove optimistic operation on error
+        removeOptimisticOperation(operationId)
+        throw errorHandler.handleError(err, {
+          context: errorHandler.createContext({
+            operation: 'createCmsItem',
+            collectionId: collection.id,
+          }),
+        })
+      }
+    },
+    [apiKey, collection.id, addOptimisticOperation, removeOptimisticOperation, fetchItems]
+  )
 
   // Update item with optimistic updates
-  const updateItem = useCallback(async (itemId: string, data: Record<string, unknown>) => {
-    if (!apiKey) return
+  const updateItem = useCallback(
+    async (itemId: string, data: Record<string, unknown>) => {
+      if (!apiKey) return
 
-    // Find the original item
-    const originalItem = items.find(item => item.id === itemId)
-    if (!originalItem) return
+      // Find the original item
+      const originalItem = items.find((item) => item.id === itemId)
+      if (!originalItem) return
 
-    const operationId = `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const updatedItem: WebflowCmsItem = {
-      ...originalItem,
-      fieldData: { ...originalItem.fieldData, ...data },
-      lastUpdated: new Date().toISOString()
-    }
-
-    // Add optimistic operation
-    addOptimisticOperation({
-      id: operationId,
-      type: 'update',
-      collectionId: collection.id,
-      itemId,
-      item: updatedItem,
-      originalItem,
-      timestamp: new Date().toISOString()
-    })
-
-    try {
-      const response = await updateCmsItemAction(apiKey, collection.id, itemId, { id: itemId, fieldData: data })
-      
-      if (response.success) {
-        // Remove optimistic operation and refresh data
-        removeOptimisticOperation(operationId)
-        await fetchItems()
-      } else {
-        // Remove optimistic operation on failure
-        removeOptimisticOperation(operationId)
-        throw new Error(response.error || 'Failed to update item')
+      const operationId = `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const updatedItem: WebflowCmsItem = {
+        ...originalItem,
+        fieldData: { ...originalItem.fieldData, ...data },
+        lastUpdated: new Date().toISOString(),
       }
-    } catch (err) {
-      // Remove optimistic operation on error
-      removeOptimisticOperation(operationId)
-      throw errorHandler.handleError(err, {
-        context: errorHandler.createContext({
-          operation: 'updateCmsItem',
-          collectionId: collection.id,
-          itemId
-        })
+
+      // Add optimistic operation
+      addOptimisticOperation({
+        id: operationId,
+        type: 'update',
+        collectionId: collection.id,
+        itemId,
+        item: updatedItem,
+        originalItem,
+        timestamp: new Date().toISOString(),
       })
-    }
-  }, [apiKey, collection.id, items, addOptimisticOperation, removeOptimisticOperation, fetchItems])
+
+      try {
+        const response = await updateCmsItemAction(apiKey, collection.id, itemId, {
+          id: itemId,
+          fieldData: data,
+        })
+
+        if (response.success) {
+          // Remove optimistic operation and refresh data
+          removeOptimisticOperation(operationId)
+          await fetchItems()
+        } else {
+          // Remove optimistic operation on failure
+          removeOptimisticOperation(operationId)
+          throw new Error(response.error || 'Failed to update item')
+        }
+      } catch (err) {
+        // Remove optimistic operation on error
+        removeOptimisticOperation(operationId)
+        throw errorHandler.handleError(err, {
+          context: errorHandler.createContext({
+            operation: 'updateCmsItem',
+            collectionId: collection.id,
+            itemId,
+          }),
+        })
+      }
+    },
+    [apiKey, collection.id, items, addOptimisticOperation, removeOptimisticOperation, fetchItems]
+  )
 
   // Delete item with optimistic updates
-  const deleteItem = useCallback(async (itemId: string) => {
-    if (!apiKey) return
+  const deleteItem = useCallback(
+    async (itemId: string) => {
+      if (!apiKey) return
 
-    // Find the original item
-    const originalItem = items.find(item => item.id === itemId)
-    if (!originalItem) return
+      // Find the original item
+      const originalItem = items.find((item) => item.id === itemId)
+      if (!originalItem) return
 
-    const operationId = `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const operationId = `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-    // Add optimistic operation
-    addOptimisticOperation({
-      id: operationId,
-      type: 'delete',
-      collectionId: collection.id,
-      itemId,
-      originalItem,
-      timestamp: new Date().toISOString()
-    })
-
-    try {
-      const response = await deleteCmsItem(apiKey, collection.id, itemId)
-      
-      if (response.success) {
-        // Remove optimistic operation and refresh data
-        removeOptimisticOperation(operationId)
-        await fetchItems()
-      } else {
-        // Remove optimistic operation on failure
-        removeOptimisticOperation(operationId)
-        throw new Error(response.error || 'Failed to delete item')
-      }
-    } catch (err) {
-      // Remove optimistic operation on error
-      removeOptimisticOperation(operationId)
-      throw errorHandler.handleError(err, {
-        context: errorHandler.createContext({
-          operation: 'deleteCmsItem',
-          collectionId: collection.id,
-          itemId
-        })
+      // Add optimistic operation
+      addOptimisticOperation({
+        id: operationId,
+        type: 'delete',
+        collectionId: collection.id,
+        itemId,
+        originalItem,
+        timestamp: new Date().toISOString(),
       })
-    }
-  }, [apiKey, collection.id, items, addOptimisticOperation, removeOptimisticOperation, fetchItems])
+
+      try {
+        const response = await deleteCmsItem(apiKey, collection.id, itemId)
+
+        if (response.success) {
+          // Remove optimistic operation and refresh data
+          removeOptimisticOperation(operationId)
+          await fetchItems()
+        } else {
+          // Remove optimistic operation on failure
+          removeOptimisticOperation(operationId)
+          throw new Error(response.error || 'Failed to delete item')
+        }
+      } catch (err) {
+        // Remove optimistic operation on error
+        removeOptimisticOperation(operationId)
+        throw errorHandler.handleError(err, {
+          context: errorHandler.createContext({
+            operation: 'deleteCmsItem',
+            collectionId: collection.id,
+            itemId,
+          }),
+        })
+      }
+    },
+    [apiKey, collection.id, items, addOptimisticOperation, removeOptimisticOperation, fetchItems]
+  )
+
+  // Bulk delete items with progress tracking
+  const bulkDeleteItems = useCallback(
+    async (itemIds: string[], onProgress?: (completed: number, total: number) => void) => {
+      if (!apiKey || itemIds.length === 0) return
+
+      const operationId = `bulk-delete-${Date.now()}`
+
+      // Add optimistic operations for all items
+      const optimisticOps = itemIds.map((itemId) => {
+        const originalItem = items.find((item) => item.id === itemId)
+        return {
+          id: `${operationId}-${itemId}`,
+          type: 'delete' as const,
+          collectionId: collection.id,
+          itemId,
+          originalItem,
+          timestamp: new Date().toISOString(),
+        }
+      })
+
+      // Add all optimistic operations
+      optimisticOps.forEach((op) => {
+        if (op.originalItem) {
+          addOptimisticOperation(op)
+        }
+      })
+
+      try {
+        const response = await bulkDeleteCmsItems(apiKey, collection.id, itemIds, onProgress)
+
+        // Remove optimistic operations for successfully deleted items
+        response.deleted.forEach((itemId) => {
+          removeOptimisticOperation(`${operationId}-${itemId}`)
+        })
+
+        // Remove optimistic operations for failed items
+        response.failed.forEach(({ itemId }) => {
+          removeOptimisticOperation(`${operationId}-${itemId}`)
+        })
+
+        // Refresh data to get accurate state
+        await fetchItems()
+
+        if (!response.success) {
+          throw new Error(response.error || 'Some items failed to delete')
+        }
+
+        return response
+      } catch (err) {
+        // Remove all optimistic operations on error
+        optimisticOps.forEach((op) => removeOptimisticOperation(op.id))
+
+        throw errorHandler.handleError(err, {
+          context: errorHandler.createContext({
+            operation: 'bulkDeleteCmsItems',
+            collectionId: collection.id,
+            itemCount: itemIds.length,
+          }),
+        })
+      }
+    },
+    [apiKey, collection.id, items, addOptimisticOperation, removeOptimisticOperation, fetchItems]
+  )
 
   // Pagination handlers
-  const handlePageChange = useCallback((page: number) => {
-    fetchItems(page)
-  }, [fetchItems])
+  const handlePageChange = useCallback(
+    (page: number) => {
+      fetchItems(page)
+    },
+    [fetchItems]
+  )
 
-  const handlePageSizeChange = useCallback((pageSize: number) => {
-    fetchItems(1, pageSize)
-  }, [fetchItems])
+  const handlePageSizeChange = useCallback(
+    (pageSize: number) => {
+      fetchItems(1, pageSize)
+    },
+    [fetchItems]
+  )
 
-  const handleSearch = useCallback((searchQuery: string) => {
-    fetchItems(1, undefined, searchQuery)
-  }, [fetchItems])
+  const handleSearch = useCallback(
+    (searchQuery: string) => {
+      fetchItems(1, undefined, searchQuery)
+    },
+    [fetchItems]
+  )
 
-  const handleSort = useCallback((field: string, direction: 'asc' | 'desc') => {
-    fetchItems(undefined, undefined, undefined, field, direction)
-  }, [fetchItems])
+  const handleSort = useCallback(
+    (field: string, direction: 'asc' | 'desc') => {
+      fetchItems(undefined, undefined, undefined, field, direction)
+    },
+    [fetchItems]
+  )
 
   // Get filtered optimistic operations for this collection
-  const collectionOptimisticOps = optimisticOperations.filter((op: OptimisticOperation) => op.collectionId === collection.id)
+  const collectionOptimisticOps = optimisticOperations.filter(
+    (op: OptimisticOperation) => op.collectionId === collection.id
+  )
 
   return {
     // Data
@@ -281,6 +379,7 @@ export function useCmsData(collection: WebflowCollection, apiKey: string | null)
     createItem,
     updateItem,
     deleteItem,
+    bulkDeleteItems,
 
     // Handlers
     handlePageChange,
@@ -291,6 +390,6 @@ export function useCmsData(collection: WebflowCollection, apiKey: string | null)
     // Utilities
     initializeIfNeeded,
     refreshData: () => fetchItems(),
-    clearError: () => setError(null)
+    clearError: () => setError(null),
   }
 }

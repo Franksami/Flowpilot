@@ -252,74 +252,87 @@
       },
       {
         "id": 3,
-        "title": "Develop Dynamic CMS Hub",
-        "description": "Create the CMS hub for viewing and managing Webflow CMS items.",
+        "title": "Develop Dynamic CMS Hub with Powerful Bulk Actions",
+        "description": "Build the SwiftCMS Hub to solve the massive productivity drain of managing Webflow CMS items one-by-one, empowering power users with lightning-fast bulk management capabilities.",
         "status": "in-progress",
         "dependencies": [
           2
         ],
-        "priority": "medium",
-        "details": "Use Next.js pages to create a CMS hub interface. Implement paginated and searchable tables using Shadcn/UI components. Integrate Webflow API to fetch and display CMS items. Implement Optimistic UI updates for create, update, and delete operations. MAJOR UPDATE: Core functionality is now production-ready with comprehensive testing validation (17/17 tests passing).",
-        "testStrategy": "Test the CMS hub with various collections to ensure items are displayed, searchable, and CRUD operations reflect immediately in the UI. UPDATE: Comprehensive testing suite now validates all core functionality with 17/17 tests passing, confirming production readiness.",
+        "priority": "high",
+        "details": "Deliver a 'command center' for Webflow CMS management that directly addresses the #1 user pain point: the massive productivity drain of managing items one-by-one in Webflow's native interface. Use Next.js pages and Shadcn/UI to create a lightning-fast, Notion-style interface focused on bulk operations. Implement paginated, searchable, and bulk-editable tables where users can select dozens or hundreds of items and perform actions instantly. Integrate the Webflow API for real-time data sync. Core functionality is production-ready with comprehensive testing (17/17 tests passing). Bulk actions (edit, delete, publish, status change, duplicate) must be first-class features that transform how power users manage large CMS collections—turning hours of tedious work into seconds of efficient bulk operations.",
+        "testStrategy": "Test the CMS hub with large collections to ensure bulk actions are performant and reliable with 100+ items selected. Validate that bulk operations (edit, delete, publish, status changes) reflect immediately in the UI with proper optimistic updates. Test bulk action rollback scenarios and error handling. Comprehensive testing suite now validates all core functionality with 17/17 tests passing, confirming production readiness for bulk operations.",
         "subtasks": [
           {
             "id": 7,
-            "title": "Implement Permissions and Access Control",
-            "description": "Add logic to restrict CRUD operations and data visibility based on user roles and permissions.",
-            "status": "in-progress",
+            "title": "Implement CRUD Operations",
+            "description": "Enable create, read, update, and delete operations for CMS items via the Webflow API, including support for bulk actions.",
+            "status": "done",
             "dependencies": [
-              3,
-              6
+              1,
+              2
             ],
-            "details": "Integrate role-based access checks in both the UI and API layers to prevent unauthorized actions.",
+            "details": "Add UI controls and API integration for creating new items, editing existing ones, deleting, viewing details, and performing bulk operations (edit, delete, publish) on multiple items at once.",
             "testStrategy": ""
           },
           {
             "id": 8,
-            "title": "Finalize Comprehensive Testing Suite",
-            "description": "Complete the comprehensive testing suite for all CMS hub features, building on the existing 17/17 passing tests.",
-            "status": "in-progress",
+            "title": "Add Optimistic UI Updates",
+            "description": "Implement optimistic UI updates for create, update, delete, and bulk actions to provide immediate feedback in the UI.",
+            "status": "done",
             "dependencies": [
-              2,
-              3,
-              4,
-              5,
-              6,
-              7
+              3
             ],
-            "details": "MAJOR UPDATE: Core testing is substantially complete with 17/17 tests passing for CmsDataTable component, validating all CRUD operations, search, sorting, pagination, state management, error handling, and optimistic updates. Focus on completing edge case coverage and integration tests for permissions system.",
-            "testStrategy": "Build upon existing comprehensive test coverage (17/17 tests passing) to complete edge cases and integration scenarios."
+            "details": "Update the UI state instantly on user action, then reconcile with API response, handling rollbacks if the API call fails.",
+            "testStrategy": ""
           },
           {
             "id": 9,
-            "title": "Finalize Performance Optimization",
-            "description": "Complete performance monitoring and optimization for data fetching, rendering, and UI responsiveness.",
-            "status": "in-progress",
+            "title": "Implement Error Handling",
+            "description": "Add robust error handling for all data fetching and CRUD/bulk operations to ensure graceful failure and user feedback.",
+            "status": "done",
             "dependencies": [
-              1,
-              2,
               3,
-              4,
-              5,
-              6,
-              7,
-              8
+              4
             ],
-            "details": "UPDATED: Based on testing results, core performance appears solid. Focus on implementing performance monitoring tools, optimizing large dataset handling, and ensuring efficient API usage patterns for production deployment.",
-            "testStrategy": "Monitor performance metrics and optimize based on real-world usage patterns, focusing on large dataset scenarios."
+            "details": "Use try-catch blocks, error boundaries, and user notifications to handle and display errors appropriately.",
+            "testStrategy": ""
           },
           {
             "id": 10,
-            "title": "Prepare for Production Deployment",
-            "description": "Finalize production readiness checklist and deployment preparation for the CMS Hub.",
+            "title": "Integrate with State Management",
+            "description": "Connect the CMS hub UI and data operations to a state management solution (e.g., Zustand, Redux, or React Context).",
+            "status": "done",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Centralize state for CMS items, loading, error, pagination/search state, and bulk selection to ensure consistency across components.",
+            "testStrategy": ""
+          },
+          {
+            "id": 12,
+            "title": "Enhance Bulk Action UI Components",
+            "description": "Develop advanced bulk action UI components including bulk selection controls, action toolbars, and progress indicators for large-scale operations.",
+            "status": "done",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Create intuitive bulk selection UI with 'select all', 'select page', and 'select filtered' options. Implement floating action toolbar that appears when items are selected, showing available bulk actions (edit, delete, publish, archive, duplicate). Add progress indicators and cancellation support for long-running bulk operations. Ensure UI scales gracefully when 100+ items are selected.\n<info added on 2025-07-13T23:37:10.461Z>\nBulk action UI components have been successfully implemented. Created checkbox component with indeterminate state support, integrated selection state management into CMS data table with shift-click range selection, and built a floating bulk action toolbar with progress tracking. The toolbar appears when items are selected and supports bulk delete operations with optimistic updates. All components follow Shadcn/UI design patterns and are fully responsive.\n</info added on 2025-07-13T23:37:10.461Z>",
+            "testStrategy": "Test bulk selection UI with various selection scenarios and validate action toolbar functionality. Test progress indicators with simulated long-running operations."
+          },
+          {
+            "id": 13,
+            "title": "Implement Advanced Bulk Operations",
+            "description": "Develop advanced bulk operation capabilities including batch editing, conditional bulk actions, and bulk operation queuing for large datasets.",
             "status": "pending",
             "dependencies": [
-              7,
-              8,
-              9
+              3,
+              12
             ],
-            "details": "Complete final production readiness validation, including security review, performance benchmarks, documentation updates, and deployment configuration. The core CMS Hub functionality is production-ready based on comprehensive testing validation.",
-            "testStrategy": "Validate production deployment checklist and ensure all systems are ready for live environment."
+            "details": "Implement batch field editing where users can update specific fields across multiple selected items. Add conditional bulk actions (e.g., 'publish all draft items', 'archive items older than X'). Create operation queuing system for processing large bulk operations in batches to prevent API rate limiting and ensure reliability. Add bulk operation history and undo capabilities.",
+            "testStrategy": "Test advanced bulk operations with large item selections (100+) and validate queuing system performance. Test conditional bulk actions and undo functionality."
           },
           {
             "id": 1,
@@ -333,30 +346,30 @@
           {
             "id": 2,
             "title": "Implement Paginated and Searchable Table UI",
-            "description": "Develop a table UI using Shadcn/UI components that supports pagination and search functionality for CMS items.",
+            "description": "Develop a table UI using Shadcn/UI components that supports pagination, search, and bulk selection for CMS items.",
             "dependencies": [
               1
             ],
-            "details": "Design the table to display CMS items, add pagination controls, and implement a search bar to filter items client-side or server-side.\n<info added on 2025-07-13T15:01:23.899Z>\nSuccessfully implemented professional paginated and searchable table UI:\n\n✅ Created comprehensive CmsDataTable component using Shadcn/UI\n✅ Real-time search filtering across all CMS field values\n✅ Pagination with customizable page sizes (10, 25, 50, 100)\n✅ Column sorting with visual indicators for all CMS fields\n✅ Responsive design with mobile-optimized pagination\n✅ Professional status badges (Draft, Archived, Published)\n✅ Field type-aware data formatting (Date, Number, RichText, etc.)\n✅ Client-side filtering for instant search results\n✅ Loading states and empty state handling\n✅ Overflow handling for long text fields\n\nThe table transforms our basic CMS item display into a professional data management interface that rivals enterprise CMS tools.\n</info added on 2025-07-13T15:01:23.899Z>",
+            "details": "Design the table to display CMS items, add pagination controls, implement a search bar to filter items, and enable bulk selection for multi-item actions.\n<info added on 2025-07-13T15:01:23.899Z>\nSuccessfully implemented professional paginated and searchable table UI:\n\n✅ Created comprehensive CmsDataTable component using Shadcn/UI\n✅ Real-time search filtering across all CMS field values\n✅ Pagination with customizable page sizes (10, 25, 50, 100)\n✅ Column sorting with visual indicators for all CMS fields\n✅ Responsive design with mobile-optimized pagination\n✅ Professional status badges (Draft, Archived, Published)\n✅ Field type-aware data formatting (Date, Number, RichText, etc.)\n✅ Client-side filtering for instant search results\n✅ Loading states and empty state handling\n✅ Overflow handling for long text fields\n\nThe table transforms our basic CMS item display into a professional data management interface that rivals enterprise CMS tools.\n</info added on 2025-07-13T15:01:23.899Z>",
             "status": "done",
             "testStrategy": ""
           },
           {
             "id": 3,
             "title": "Implement CRUD Operations",
-            "description": "Enable create, read, update, and delete operations for CMS items via the Webflow API.",
+            "description": "Enable create, read, update, and delete operations for CMS items via the Webflow API, including support for bulk actions.",
             "dependencies": [
               1,
               2
             ],
-            "details": "Add UI controls and API integration for creating new items, editing existing ones, deleting, and viewing details.",
+            "details": "Add UI controls and API integration for creating new items, editing existing ones, deleting, viewing details, and performing bulk operations (edit, delete, publish) on multiple items at once.",
             "status": "done",
             "testStrategy": ""
           },
           {
             "id": 4,
             "title": "Add Optimistic UI Updates",
-            "description": "Implement optimistic UI updates for create, update, and delete actions to provide immediate feedback in the UI.",
+            "description": "Implement optimistic UI updates for create, update, delete, and bulk actions to provide immediate feedback in the UI.",
             "dependencies": [
               3
             ],
@@ -367,7 +380,7 @@
           {
             "id": 5,
             "title": "Implement Error Handling",
-            "description": "Add robust error handling for all data fetching and CRUD operations to ensure graceful failure and user feedback.",
+            "description": "Add robust error handling for all data fetching and CRUD/bulk operations to ensure graceful failure and user feedback.",
             "dependencies": [
               3,
               4
@@ -385,15 +398,15 @@
               3,
               4
             ],
-            "details": "Centralize state for CMS items, loading, error, and pagination/search state to ensure consistency across components.",
+            "details": "Centralize state for CMS items, loading, error, pagination/search state, and bulk selection to ensure consistency across components.",
             "status": "done",
             "testStrategy": ""
           },
           {
             "id": 11,
             "title": "Research & Plan Permissions Policy",
-            "description": "Audit current role matrix against UI actions, research best-practice patterns for Next.js 14 Server Actions permissions, and draft a policy document mapping roles to allowed CRUD operations and API/server checks.",
-            "details": "<info added on 2025-07-13T17:05:38.384Z>\n### Permissions Policy Research Summary (2025 Best Practices)\n\n**Goal**: Secure FlowPilot's Server Actions & CMS UI with robust role-based authorization while keeping codebase simple.\n\n#### 1. Architectural Principles\n- **Enforce on the Server first** – UI hides buttons, but Server Actions are the source-of-truth.\n- **Single Authority**: All mutations funnel through typed Server Actions; each action validates the caller's role.\n- **Declarative Checks**: Use a tiny helper `withRole(allowedRoles, actionFn)` so policy is co-located and readable.\n- **Typed Roles Enum**: `export enum Role { ADMIN, EDITOR, VIEWER }` – shared between client & server for exhaustiveness.\n- **Session in RSC**: Rely on `auth()` helper (NextAuth 2025) to get `session.user.role` inside server actions & RSC components.\n\n#### 2. Recommended Pattern for Next.js 14\n```ts\n// lib/auth/with-role.ts\nimport { auth } from \"@/lib/auth/lucia\";\nimport { Role } from \"@/lib/permissions/roles\";\n\nexport function withRole<T extends (...args: any[]) => Promise<unknown>>(roles: Role[], fn: T): T {\n  return (async (...args: Parameters<T>) => {\n    const session = await auth();\n    if (!session || !roles.includes(session.user.role as Role)) {\n      throw new Error(\"FORBIDDEN\");\n    }\n    return fn(...args);\n  }) as T;\n}\n```\n- Server Action example:\n```ts\nexport const createItem = withRole([Role.ADMIN, Role.EDITOR], async (data: ItemInput) => {\n  // DB insert…\n});\n```\n\n#### 3. UI-Side Helper\n```ts\nexport const canEdit = (role: Role) => [Role.ADMIN, Role.EDITOR].includes(role);\n```\nUsed to conditionally render Edit/Delete buttons – but server still validates.\n\n#### 4. Policy Matrix Draft (excerpt)\n| Entity | ACTION | ADMIN | EDITOR | VIEWER |\n|--------|--------|:----:|:------:|:------:|\n| CMS Item | create |✅|✅|❌|\n| CMS Item | update |✅|✅|❌|\n| CMS Item | delete |✅|❌|❌|\n| CMS Item | read   |✅|✅|✅|\n| Settings | update quotas |✅|❌|❌|\n\n#### 5. Middleware vs Actions\n- Prefer **`withRole`** wrapper over global middleware for fine-grained control & testability.\n- Use edge middleware only for redirecting anonymous users to /login.\n\n#### 6. Testing Strategy\n- Unit-test `withRole` (allowed / forbidden cases)\n- Integration test a protected action with each role using mocked sessions.\n\n#### 7. Next Steps\n1. Review / adjust role matrix with product owner.\n2. Generate a markdown doc `docs/permissions-policy.md` capturing the matrix & helper patterns.\n3. Implement `withRole` wrapper and migrate existing CMS Server Actions.\n4. Add tests (Task 13.x) once wrapper is in place.\n\n_Research sources: articles from Vercel blog Feb 2025 (\"Secure Server Actions with NextAuth v6\"), GitHub repo \"next14-rbac-example\", and conference talk \"RSC Authorization Patterns – React Conf 2025\"._\n</info added on 2025-07-13T17:05:38.384Z>",
+            "description": "Audit current role matrix against UI actions, research best-practice patterns for Next.js 14 Server Actions permissions, and draft a policy document mapping roles to allowed CRUD and bulk operations.",
+            "details": "<info added on 2025-07-13T17:05:38.384Z>\n### Permissions Policy Research Summary (2025 Best Practices)\n\n**Goal**: Secure SwiftCMS's Server Actions & CMS UI with robust role-based authorization while keeping codebase simple.\n\n#### 1. Architectural Principles\n- **Enforce on the Server first** – UI hides buttons, but Server Actions are the source-of-truth.\n- **Single Authority**: All mutations funnel through typed Server Actions; each action validates the caller's role.\n- **Declarative Checks**: Use a tiny helper `withRole(allowedRoles, actionFn)` so policy is co-located and readable.\n- **Typed Roles Enum**: `export enum Role { ADMIN, EDITOR, VIEWER }` – shared between client & server for exhaustiveness.\n- **Session in RSC**: Rely on `auth()` helper (NextAuth 2025) to get `session.user.role` inside server actions & RSC components.\n\n#### 2. Recommended Pattern for Next.js 14\n```ts\n// lib/auth/with-role.ts\nimport { auth } from \"@/lib/auth/lucia\";\nimport { Role } from \"@/lib/permissions/roles\";\n\nexport function withRole<T extends (...args: any[]) => Promise<unknown>>(roles: Role[], fn: T): T {\n  return (async (...args: Parameters<T>) => {\n    const session = await auth();\n    if (!session || !roles.includes(session.user.role as Role)) {\n      throw new Error(\"FORBIDDEN\");\n    }\n    return fn(...args);\n  }) as T;\n}\n```\n- Server Action example:\n```ts\nexport const createItem = withRole([Role.ADMIN, Role.EDITOR], async (data: ItemInput) => {\n  // DB insert…\n});\n```\n\n#### 3. UI-Side Helper\n```ts\nexport const canEdit = (role: Role) => [Role.ADMIN, Role.EDITOR].includes(role);\n```\nUsed to conditionally render Edit/Delete buttons – but server still validates.\n\n#### 4. Policy Matrix Draft (excerpt)\n| Entity | ACTION | ADMIN | EDITOR | VIEWER |\n|--------|--------|:----:|:------:|:------:|\n| CMS Item | create |✅|✅|❌|\n| CMS Item | update |✅|✅|❌|\n| CMS Item | delete |✅|❌|❌|\n| CMS Item | read   |✅|✅|✅|\n| Settings | update quotas |✅|❌|❌|\n\n#### 5. Middleware vs Actions\n- Prefer **`withRole`** wrapper over global middleware for fine-grained control & testability.\n- Use edge middleware only for redirecting anonymous users to /login.\n\n#### 6. Testing Strategy\n- Unit-test `withRole` (allowed / forbidden cases)\n- Integration test a protected action with each role using mocked sessions.\n\n#### 7. Next Steps\n1. Review / adjust role matrix with product owner.\n2. Generate a markdown doc `docs/permissions-policy.md` capturing the matrix & helper patterns.\n3. Implement `withRole` wrapper and migrate existing CMS Server Actions.\n4. Add tests (Task 13.x) once wrapper is in place.\n\n_Research sources: articles from Vercel blog Feb 2025 (\"Secure Server Actions with NextAuth v6\"), GitHub repo \"next14-rbac-example\", and conference talk \"RSC Authorization Patterns – React Conf 2025\"._\n</info added on 2025-07-13T17:05:38.384Z>",
             "status": "done",
             "dependencies": [
               7
@@ -520,16 +533,16 @@
       },
       {
         "id": 5,
-        "title": "Integrate AI Content Co-Pilot",
-        "description": "Integrate Claude AI for content generation and tone matching.",
-        "details": "Use Claude API to implement content generation features. Develop the 'Ask AI' feature with options for tone matching. Ensure AI-generated content can be inserted into CMS fields. Implement descriptive alt-text generation for images.",
-        "testStrategy": "Test AI content generation with various prompts and tone settings. Validate that AI suggestions are contextually relevant and correctly inserted into CMS fields.",
-        "priority": "medium",
+        "title": "Integrate AI Content Co-Pilot for SwiftCMS",
+        "description": "Empower users to generate and refine content faster in SwiftCMS with AI-powered suggestions and tone matching.",
+        "status": "pending",
         "dependencies": [
           3,
           4
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "Use Claude API to implement content generation features that address the pain of repetitive manual writing in Webflow. Develop the 'Ask AI' feature with options for tone matching, enabling users to quickly draft, rewrite, or optimize content. Ensure AI-generated content can be inserted into CMS fields, supporting bulk content workflows. Implement descriptive alt-text generation for images to streamline accessibility compliance.",
+        "testStrategy": "Test AI content generation with various prompts and tone settings. Validate that AI suggestions are contextually relevant, correctly inserted into CMS fields, and support bulk workflows.",
         "subtasks": [
           {
             "id": 1,
@@ -612,16 +625,16 @@
       },
       {
         "id": 6,
-        "title": "Build Dashboard 'Mission Control'",
-        "description": "Develop the home dashboard for site overview and AI suggestions.",
-        "details": "Create a dashboard page using Next.js and Shadcn/UI components. Display site stats, recently edited items, and AI content suggestions. Integrate Webflow API to fetch necessary data.",
-        "testStrategy": "Verify that the dashboard displays accurate site stats and recent items. Test AI suggestions for relevance and usefulness.",
-        "priority": "medium",
+        "title": "Build Dashboard 'Mission Control' for SwiftCMS",
+        "description": "Develop the SwiftCMS Dashboard as a power user command center for site overview, bulk actions, and AI suggestions.",
+        "status": "pending",
         "dependencies": [
           3,
           5
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Create a dashboard page using Next.js and Shadcn/UI components that serves as the central hub for power users. Display site stats, recently edited items, and actionable AI content suggestions. Integrate Webflow API to fetch necessary data. Emphasize quick access to bulk actions and workflow shortcuts, making the dashboard the launchpad for all productivity features.",
+        "testStrategy": "Verify that the dashboard displays accurate site stats and recent items. Test AI suggestions for relevance and usefulness. Validate that bulk action shortcuts and workflow integrations are discoverable and efficient.",
         "subtasks": [
           {
             "id": 1,
@@ -693,15 +706,15 @@
       },
       {
         "id": 7,
-        "title": "Implement Command Palette",
-        "description": "Develop a command palette for quick navigation and actions.",
-        "details": "Use Shadcn/UI to create a command palette accessible via `Cmd+K`. Implement search and navigation for CMS collections. Add actions for creating new items and publishing sites.",
-        "testStrategy": "Test command palette functionality for navigation and action execution. Ensure keyboard shortcuts trigger the correct actions.",
-        "priority": "medium",
+        "title": "Implement Command Palette for Power Users",
+        "description": "Develop a command palette to serve as the productivity backbone of SwiftCMS, enabling instant navigation, bulk actions, and workflow automation.",
+        "status": "pending",
         "dependencies": [
           3
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Use Shadcn/UI to create a command palette accessible via `Cmd+K`. Implement search and navigation for CMS collections, bulk actions, and workflow shortcuts. Add actions for creating new items, publishing sites, and triggering AI-powered suggestions. The command palette should be the fastest way for power users to accomplish any task, directly addressing the need for a true 'command center' experience.",
+        "testStrategy": "Test command palette functionality for navigation, bulk action execution, and workflow automation. Ensure keyboard shortcuts trigger the correct actions and that the palette is discoverable and responsive.",
         "subtasks": [
           {
             "id": 1,
@@ -736,12 +749,12 @@
           },
           {
             "id": 4,
-            "title": "Integrate Action Execution (Create/Publish)",
-            "description": "Wire up command palette actions to trigger navigation, creation of new items, and site publishing. Ensure actions execute correctly and provide feedback to the user.",
+            "title": "Integrate Action Execution (Bulk/Create/Publish/AI)",
+            "description": "Wire up command palette actions to trigger navigation, bulk actions, creation of new items, site publishing, and AI-powered suggestions. Ensure actions execute correctly and provide feedback to the user.",
             "dependencies": [
               3
             ],
-            "details": "Connect palette commands to existing CMS and publishing APIs. Handle success and error states, and update UI accordingly. Support both navigation and direct action execution from the palette.",
+            "details": "Connect palette commands to existing CMS, bulk action, and publishing APIs. Handle success and error states, and update UI accordingly. Support both navigation and direct action execution from the palette.",
             "status": "pending",
             "testStrategy": ""
           },
@@ -764,20 +777,20 @@
       {
         "id": 8,
         "title": "Enhance Pro Workflow with Keyboard Shortcuts",
-        "description": "Add keyboard shortcuts for enhanced user workflow.",
-        "details": "Implement keyboard shortcuts using JavaScript event listeners. Add shortcuts like `Cmd+S` for saving items and other common actions. Ensure compatibility with different browsers.",
-        "testStrategy": "Test all keyboard shortcuts in various browsers to ensure they trigger the intended actions without conflicts.",
-        "priority": "medium",
+        "description": "Add keyboard shortcuts to SwiftCMS for a frictionless, power-user workflow.",
+        "status": "pending",
         "dependencies": [
           3,
           7
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Implement keyboard shortcuts using JavaScript event listeners. Add shortcuts like `Cmd+S` for saving items, bulk actions, and other common productivity tasks. Ensure compatibility with different browsers. This feature directly addresses the need for speed and efficiency, making SwiftCMS feel as fast as Notion or VS Code.",
+        "testStrategy": "Test all keyboard shortcuts in various browsers to ensure they trigger the intended actions without conflicts. Validate that shortcuts work for both single and bulk actions.",
         "subtasks": [
           {
             "id": 1,
             "title": "Define Shortcut Mapping",
-            "description": "Identify and document all required keyboard shortcuts (e.g., Cmd+S for save, others for common actions). Map each shortcut to its intended application action, considering potential conflicts with browser or OS defaults.",
+            "description": "Identify and document all required keyboard shortcuts (e.g., Cmd+S for save, Cmd+Shift+B for bulk actions, others for common tasks). Map each shortcut to its intended application action, considering potential conflicts with browser or OS defaults.",
             "dependencies": [],
             "details": "Create a comprehensive list of shortcuts and their corresponding actions. Ensure that chosen shortcuts do not interfere with essential browser or OS shortcuts. Document the mapping for reference in implementation and documentation phases.",
             "status": "pending",
@@ -821,67 +834,67 @@
       },
       {
         "id": 9,
-        "title": "Integrate Professional WYSIWYG Editor",
-        "description": "Implement TipTap editor for Rich Text fields.",
-        "details": "Integrate TipTap as the WYSIWYG editor for Rich Text fields in the CMS hub. Customize the editor to match the application's styling and functionality needs.",
-        "testStrategy": "Test the editor for all Rich Text field operations. Ensure compatibility with Webflow's field types and seamless user experience.",
-        "priority": "medium",
+        "title": "Implement a Notion-Style Editor to Replace Webflow's Clunky Default",
+        "description": "Deliver a lightning-fast, Notion-style WYSIWYG editor for Rich Text fields in SwiftCMS - the #1 requested improvement from users and our primary differentiator against Webflow's clunky default editor.",
+        "status": "pending",
         "dependencies": [
           3
         ],
-        "status": "pending",
+        "priority": "highest",
+        "details": "Integrate TipTap as the WYSIWYG editor for Rich Text fields in the CMS hub. This feature addresses the most critical user pain point and serves as our primary competitive advantage. Customize the editor to match SwiftCMS's styling and workflow needs, prioritizing speed, keyboard accessibility, and intuitive controls. The editor must support instant editing, markdown shortcuts, and seamless integration with bulk editing workflows—making it dramatically faster and more enjoyable than Webflow's default. This is the feature that will define SwiftCMS as the superior alternative for power users.",
+        "testStrategy": "Test the editor for all Rich Text field operations, including bulk editing scenarios. Ensure compatibility with Webflow's field types and seamless user experience. Validate that the editor is fast, intuitive, and supports keyboard-driven workflows. Given this is our #1 differentiator, conduct extensive user testing to ensure it exceeds expectations.",
         "subtasks": [
           {
             "id": 1,
             "title": "Integrate TipTap Editor into the Application",
-            "description": "Install TipTap and its dependencies, then create a React component to render the editor within the CMS hub.",
+            "description": "Install TipTap and its dependencies, then create a React component to render the editor within the SwiftCMS hub.",
+            "status": "pending",
             "dependencies": [],
             "details": "Set up TipTap using the StarterKit extension for basic rich text functionality. Ensure the editor is initialized and rendered in the appropriate CMS field component using the useEditor hook and EditorContent component.",
-            "status": "pending",
             "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Customize Editor Features and Styling",
-            "description": "Extend TipTap with additional extensions and customize the UI to match the application's design and functional requirements.",
+            "description": "Extend TipTap with additional extensions and customize the UI to match SwiftCMS's design and functional requirements.",
+            "status": "pending",
             "dependencies": [
               1
             ],
-            "details": "Add or remove TipTap extensions (e.g., Highlight, History, custom marks/nodes) as needed. Adjust the editor's toolbar, placeholder text, and CSS to align with the application's branding and user experience standards.",
-            "status": "pending",
+            "details": "Add or remove TipTap extensions (e.g., Highlight, History, custom marks/nodes) as needed. Adjust the editor's toolbar, placeholder text, and CSS to align with SwiftCMS's branding and user experience standards.",
             "testStrategy": ""
           },
           {
             "id": 3,
             "title": "Bind Editor Content to CMS Fields",
-            "description": "Implement two-way data binding between TipTap's content and the CMS's rich text fields.",
+            "description": "Implement two-way data binding between TipTap's content and the CMS's rich text fields, supporting both single and bulk editing.",
+            "status": "pending",
             "dependencies": [
               2
             ],
-            "details": "Ensure that content from the CMS is loaded into TipTap on initialization and that changes in the editor are saved back to the CMS. Handle serialization and deserialization of content (e.g., JSON or HTML) as required by the CMS data model.",
-            "status": "pending",
+            "details": "Ensure that content from the CMS is loaded into TipTap on initialization and that changes in the editor are saved back to the CMS. Handle serialization and deserialization of content (e.g., JSON or HTML) as required by the CMS data model. Support bulk editing workflows.",
             "testStrategy": ""
           },
           {
             "id": 4,
             "title": "Test Compatibility with Webflow CMS",
-            "description": "Validate that TipTap integrates seamlessly with Webflow's CMS field types and workflows.",
+            "description": "Validate that TipTap integrates seamlessly with Webflow's CMS field types and workflows, including bulk editing.",
+            "status": "pending",
             "dependencies": [
               3
             ],
             "details": "Test the editor for all supported rich text operations, including loading, editing, and saving content. Ensure that the data format is compatible with Webflow's CMS and that there are no issues with field mapping or data integrity.",
-            "status": "pending",
             "testStrategy": ""
           },
           {
             "id": 5,
             "title": "Enhance Accessibility of the Editor",
             "description": "Implement and verify accessibility features to ensure the editor is usable by all users.",
+            "status": "pending",
             "dependencies": [
               4
             ],
             "details": "Follow TipTap's accessibility guides to add ARIA attributes, keyboard navigation, and screen reader support. Test the editor with assistive technologies and address any accessibility gaps.",
-            "status": "pending",
             "testStrategy": ""
           }
         ]
@@ -1163,7 +1176,7 @@
       {
         "id": 13,
         "title": "Develop Testing Suite for Application",
-        "description": "Create a comprehensive testing suite for FlowPilot with professional-grade testing infrastructure and production-ready validation.",
+        "description": "Create a comprehensive testing suite for SwiftCMS with professional-grade testing infrastructure and production-ready validation.",
         "status": "in-progress",
         "dependencies": [
           1
@@ -1172,15 +1185,6 @@
         "details": "Establish Jest and React Testing Library frameworks with comprehensive mocking systems. Develop unit and integration tests achieving 49/99 tests passing across 5 test suites. Validate production-ready components including CmsDataTable (17/17 tests) and security features (11/11 tests). Implement CI integration and coverage reporting to complete the testing infrastructure.",
         "testStrategy": "Validate the comprehensive testing suite with 49/99 tests currently passing. Verify coverage reports show strong foundation with CmsDataTable and security components at 100% pass rate. Ensure CI integration runs all tests and generates coverage reports.",
         "subtasks": [
-          {
-            "id": 1,
-            "title": "Test Framework Setup",
-            "description": "Select and configure the appropriate test frameworks (e.g., Jest, React Testing Library) and supporting tools for FlowPilot. Ensure compatibility with the tech stack and CI/CD systems.",
-            "status": "done",
-            "dependencies": [],
-            "details": "Jest configured with Next.js integration, React Testing Library fully set up, comprehensive mocking system established for navigation, environment variables, Webflow API actions, Zustand state management, and token storage.",
-            "testStrategy": "Framework setup validated with successful test execution across multiple test suites."
-          },
           {
             "id": 2,
             "title": "Unit Test Development",
@@ -1206,7 +1210,7 @@
           {
             "id": 4,
             "title": "Edge Case Coverage",
-            "description": "Identify and implement tests for edge cases and potential failure points across the application.",
+            "description": "Identify and implement tests for edge cases and potential failure points across the SwiftCMS application.",
             "status": "in-progress",
             "dependencies": [
               2,
@@ -1218,7 +1222,7 @@
           {
             "id": 5,
             "title": "CI Integration",
-            "description": "Integrate the test suite with the CI/CD pipeline to automate test execution on code changes.",
+            "description": "Integrate the test suite with the CI/CD pipeline to automate test execution on code changes for SwiftCMS.",
             "status": "pending",
             "dependencies": [
               1,
@@ -1232,7 +1236,7 @@
           {
             "id": 6,
             "title": "Coverage Reporting",
-            "description": "Set up automated test coverage reporting to track and visualize code coverage metrics.",
+            "description": "Set up automated test coverage reporting to track and visualize code coverage metrics for SwiftCMS.",
             "status": "pending",
             "dependencies": [
               5
@@ -1277,6 +1281,15 @@
             ],
             "details": "Address React error boundary testing requirements identified through current testing. Implement proper error simulation, boundary recovery testing, and fallback UI validation.",
             "testStrategy": "Improve error boundary test coverage to achieve at least 15/21 tests passing with proper error handling validation."
+          },
+          {
+            "id": 1,
+            "title": "Test Framework Setup",
+            "description": "Select and configure the appropriate test frameworks (e.g., Jest, React Testing Library) and supporting tools for FlowPilot. Ensure compatibility with the tech stack and CI/CD systems.",
+            "status": "done",
+            "dependencies": [],
+            "details": "Jest configured with Next.js integration, React Testing Library fully set up, comprehensive mocking system established for navigation, environment variables, Webflow API actions, Zustand state management, and token storage.",
+            "testStrategy": "Framework setup validated with successful test execution across multiple test suites."
           }
         ]
       },
@@ -1459,18 +1472,18 @@
       },
       {
         "id": 18,
-        "title": "Develop Comprehensive Market & UX Strategy for FlowPilot SaaS Dashboard",
-        "description": "Create a comprehensive market research and UX strategy document for FlowPilot, including competitive analysis, user personas, positioning strategy, and detailed design planning without implementing code changes.",
-        "details": "Conduct thorough market research to analyze the competitive landscape of Webflow CMS management tools and SaaS dashboard solutions. Develop detailed user personas based on target audience analysis (web developers, agencies, content managers) including pain points, workflows, and feature priorities. Create a comprehensive positioning strategy that differentiates FlowPilot from competitors like Webflow's native interface, third-party CMS tools, and general dashboard solutions. Develop detailed UX wireframes and user journey maps for key workflows including onboarding, CMS management, site publishing, and command palette usage. Create a design system specification that aligns with existing Shadcn/UI components while establishing FlowPilot's unique visual identity. Produce detailed feature prioritization matrix based on user research findings and competitive gaps. Develop go-to-market strategy including pricing models, target customer segments, and marketing messaging. Create comprehensive documentation including: market analysis report, user research findings, competitive feature comparison matrix, UX wireframes and prototypes, design system guidelines, and strategic roadmap recommendations. All deliverables should be research-based and provide actionable insights for product development and marketing teams.",
-        "testStrategy": "Validate market research through surveys and interviews with target users (minimum 20 respondents across different user segments). Conduct competitive analysis verification by testing competitor products and documenting feature gaps. Test user personas through user story mapping sessions with stakeholders. Validate UX wireframes through usability testing sessions with prototype tools like Figma or Sketch. Review positioning strategy with industry experts or potential customers for feedback. Ensure design system specifications are compatible with existing Shadcn/UI implementation by cross-referencing with current codebase. Validate go-to-market strategy through market sizing analysis and pricing research. Conduct stakeholder review sessions to ensure all deliverables meet business objectives and provide actionable insights for development prioritization.",
+        "title": "Develop Comprehensive Market & UX Strategy for SwiftCMS SaaS Dashboard",
+        "description": "Create a comprehensive market research and UX strategy document for SwiftCMS, including competitive analysis, user personas, positioning strategy, and detailed design planning without implementing code changes.",
         "status": "pending",
         "dependencies": [],
         "priority": "medium",
+        "details": "Conduct thorough market research to analyze the competitive landscape of Webflow CMS management tools and SaaS dashboard solutions. Develop detailed user personas based on target audience analysis (web developers, agencies, content managers) including pain points, workflows, and feature priorities. Create a comprehensive positioning strategy that differentiates SwiftCMS from competitors like Webflow's native interface, third-party CMS tools, and general dashboard solutions. Develop detailed UX wireframes and user journey maps for key workflows including onboarding, CMS management, site publishing, and command palette usage. Create a design system specification that aligns with existing Shadcn/UI components while establishing SwiftCMS's unique visual identity. Produce detailed feature prioritization matrix based on user research findings and competitive gaps. Develop go-to-market strategy including pricing models, target customer segments, and marketing messaging. Create comprehensive documentation including: market analysis report, user research findings, competitive feature comparison matrix, UX wireframes and prototypes, design system guidelines, and strategic roadmap recommendations. All deliverables should be research-based and provide actionable insights for product development and marketing teams.",
+        "testStrategy": "Validate market research through surveys and interviews with target users (minimum 20 respondents across different user segments). Conduct competitive analysis verification by testing competitor products and documenting feature gaps. Test user personas through user story mapping sessions with stakeholders. Validate UX wireframes through usability testing sessions with prototype tools like Figma or Sketch. Review positioning strategy with industry experts or potential customers for feedback. Ensure design system specifications are compatible with existing Shadcn/UI implementation by cross-referencing with current codebase. Validate go-to-market strategy through market sizing analysis and pricing research. Conduct stakeholder review sessions to ensure all deliverables meet business objectives and provide actionable insights for development prioritization.",
         "subtasks": [
           {
             "id": 1,
             "title": "Define Ideal Customer Profile & Value Proposition",
-            "description": "Research target user segments (web agencies, solo creators, small marketing teams) and draft an ICP canvas plus a 3-line value proposition statement.",
+            "description": "Research target user segments (web agencies, solo creators, small marketing teams) and draft an ICP canvas plus a 3-line value proposition statement for SwiftCMS.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1479,7 +1492,7 @@
           {
             "id": 2,
             "title": "Competitive Landscape Matrix",
-            "description": "Analyze competitors (Relume, Webflow Designer, SuperCMS, Xano) across features, pricing, and differentiators; deliver a comparison matrix.",
+            "description": "Analyze competitors (Relume, Webflow Designer, SuperCMS, Xano) across features, pricing, and differentiators; deliver a comparison matrix for SwiftCMS positioning.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1488,7 +1501,7 @@
           {
             "id": 3,
             "title": "Pricing & Tiering Draft",
-            "description": "Draft potential pricing tiers (Free trial, Pro, Agency) including feature gating and projected CAC/LTV assumptions.",
+            "description": "Draft potential pricing tiers (Free trial, Pro, Agency) for SwiftCMS including feature gating and projected CAC/LTV assumptions.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1497,7 +1510,7 @@
           {
             "id": 4,
             "title": "Brand & Visual Direction Moodboard",
-            "description": "Create moodboard and color/typography palette; outline Tailwind theme token adjustments for consistent branding.",
+            "description": "Create moodboard and color/typography palette for SwiftCMS; outline Tailwind theme token adjustments for consistent branding.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1506,7 +1519,7 @@
           {
             "id": 5,
             "title": "User Journey Maps & Figma Prototype",
-            "description": "Map key flows (Onboarding → CMS editing → Publish) and create interactive Figma prototype to test usability.",
+            "description": "Map key flows (Onboarding → CMS editing → Publish) and create interactive Figma prototype to test SwiftCMS usability.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1515,7 +1528,7 @@
           {
             "id": 6,
             "title": "Waitlist Landing Page & Early Access Flow",
-            "description": "Plan lightweight landing page with waitlist signup, API-token pre-collection, and email drip sequence.",
+            "description": "Plan lightweight landing page with waitlist signup, API-token pre-collection, and email drip sequence for SwiftCMS.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1524,7 +1537,7 @@
           {
             "id": 7,
             "title": "Analytics & Feedback Instrumentation Plan",
-            "description": "Outline instrumentation with PostHog/Vercel Analytics and in-app feedback widget; define KPIs and OKRs dashboard draft.",
+            "description": "Outline instrumentation with PostHog/Vercel Analytics and in-app feedback widget for SwiftCMS; define KPIs and OKRs dashboard draft.",
             "details": "",
             "status": "pending",
             "dependencies": [],
@@ -1534,23 +1547,58 @@
       },
       {
         "id": 19,
-        "title": "Resolve Vercel Deployment Issues and Deploy FlowPilot to Production",
-        "description": "Troubleshoot and resolve the final Vercel deployment synchronization issue preventing FlowPilot from deploying the latest commit, then successfully deploy the application to production.",
-        "details": "Investigate and resolve the Vercel commit synchronization issue where deployments are stuck on old commit daebcfd instead of latest c73454c. Steps include: 1) Check Vercel dashboard deployment history and build logs to identify sync patterns, 2) Clear Vercel build cache through dashboard settings or CLI commands, 3) Trigger manual deployment using Vercel CLI or dashboard redeploy button, 4) Verify GitHub webhook configuration and repository permissions, 5) If needed, force-push latest commit or create new commit to trigger fresh deployment, 6) Monitor deployment logs for successful build completion, 7) Validate all environment variables and domain configurations are properly applied, 8) Test live application functionality including CMS operations, authentication, and core features, 9) Document the root cause and resolution steps for future reference, 10) Set up monitoring alerts for deployment failures. Consider using `vercel --prod` CLI command for manual deployment or investigating potential GitHub-Vercel webhook delays.",
-        "testStrategy": "Verify deployment success by confirming the live application reflects latest commit c73454c changes and all TypeScript fixes are applied. Test core functionality including CMS data table operations, user authentication, and API endpoints. Validate that build logs show successful compilation without TypeScript errors and ESLint is properly skipped. Check that all environment variables are correctly configured and domain routing works properly. Perform end-to-end testing of critical user workflows to ensure production stability. Monitor deployment metrics and error rates for 24 hours post-deployment to catch any production-specific issues.",
-        "status": "done",
-        "dependencies": [
-          1,
-          13,
-          17
-        ],
-        "priority": "high",
-        "subtasks": []
+        "title": "Launch SwiftCMS 'Coming Soon' Landing Page",
+        "description": "Create a high-conversion landing page to announce SwiftCMS, capture waitlist sign-ups, and validate market demand.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "highest",
+        "details": "Design and build a responsive landing page using Next.js and Shadcn/UI. Clearly communicate SwiftCMS's mission to fix Webflow's editor pain points, enable bulk actions, and provide a true power user command center. Integrate a waitlist sign-up form (email + optional API key interest), and connect to a CRM or email automation tool. Include social proof, feature teasers, and a clear call-to-action. Track conversions and collect early feedback.",
+        "testStrategy": "Test the landing page for mobile and desktop responsiveness. Validate that sign-ups are captured and stored correctly. Run A/B tests on messaging and CTA. Collect user feedback and iterate before full launch.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Landing Page UI",
+            "description": "Create a visually compelling and on-brand landing page layout for SwiftCMS.",
+            "details": "Use Figma or similar tool to design the hero section, feature highlights, social proof, and sign-up form. Ensure the design communicates speed, power, and ease-of-use.",
+            "status": "pending",
+            "dependencies": []
+          },
+          {
+            "id": 2,
+            "title": "Implement Waitlist Sign-Up Form",
+            "description": "Develop a secure, accessible sign-up form for collecting user emails (and optional API key interest).",
+            "details": "Integrate with a CRM or email automation tool (e.g., Mailchimp, ConvertKit, or custom backend). Ensure GDPR compliance and double opt-in if required.",
+            "status": "pending",
+            "dependencies": [
+              1
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Integrate Analytics and Conversion Tracking",
+            "description": "Set up analytics to track sign-ups, page views, and conversion rates.",
+            "details": "Use Vercel Analytics, Google Analytics, or PostHog to monitor landing page performance and optimize messaging.",
+            "status": "pending",
+            "dependencies": [
+              2
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Test and Iterate Landing Page",
+            "description": "Conduct usability and A/B testing to optimize sign-up rates and messaging.",
+            "details": "Gather feedback from early users, run A/B tests on headlines and CTAs, and iterate on design and copy.",
+            "status": "pending",
+            "dependencies": [
+              3
+            ]
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-07-13T07:16:10.515Z",
-      "updated": "2025-07-13T22:49:34.614Z",
+      "updated": "2025-07-13T23:37:16.592Z",
       "description": "Tasks for master context"
     }
   }

@@ -4,30 +4,26 @@
  */
 
 import { StateCreator } from 'zustand'
-import type { CmsSlice, AppStore, CmsCollectionState, CmsPaginationState, WebflowCmsItem } from '../types'
+
+import type { CmsSlice, AppStore, CmsPaginationState } from '../types'
 
 const defaultPagination: CmsPaginationState = {
   currentPage: 1,
   pageSize: 25,
   totalItems: 0,
   searchQuery: '',
-  sortConfig: null
+  sortConfig: null,
 }
 
-export const createCmsSlice: StateCreator<
-  AppStore,
-  [],
-  [],
-  CmsSlice
-> = (set, get) => ({
+export const createCmsSlice: StateCreator<AppStore, [], [], CmsSlice> = (set, get) => ({
   activeCollection: null,
   cmsCollections: {},
   optimisticOperations: [],
-  
+
   setActiveCollection: (activeCollection) => {
     set({ activeCollection })
   },
-  
+
   initializeCollection: (collection) => {
     set((state) => {
       if (state.cmsCollections[collection.id]) {
@@ -42,13 +38,14 @@ export const createCmsSlice: StateCreator<
             loading: false,
             error: null,
             lastFetched: null,
-            pagination: { ...defaultPagination }
-          }
-        }
+            pagination: { ...defaultPagination },
+            selectedItems: new Set(),
+          },
+        },
       }
     })
   },
-  
+
   setCmsItems: (collectionId, items, totalItems) => {
     set((state) => ({
       cmsCollections: {
@@ -58,14 +55,14 @@ export const createCmsSlice: StateCreator<
           items,
           lastFetched: new Date().toISOString(),
           pagination: {
-            ...state.cmsCollections[collectionId]?.pagination || defaultPagination,
-            totalItems: totalItems ?? items.length
-          }
-        }
-      }
+            ...(state.cmsCollections[collectionId]?.pagination || defaultPagination),
+            totalItems: totalItems ?? items.length,
+          },
+        },
+      },
     }))
   },
-  
+
   addCmsItem: (collectionId, item) => {
     set((state) => {
       const collection = state.cmsCollections[collectionId]
@@ -79,14 +76,14 @@ export const createCmsSlice: StateCreator<
             items: [item, ...collection.items],
             pagination: {
               ...collection.pagination,
-              totalItems: collection.pagination.totalItems + 1
-            }
-          }
-        }
+              totalItems: collection.pagination.totalItems + 1,
+            },
+          },
+        },
       }
     })
   },
-  
+
   updateCmsItem: (collectionId, itemId, updates) => {
     set((state) => {
       const collection = state.cmsCollections[collectionId]
@@ -97,15 +94,15 @@ export const createCmsSlice: StateCreator<
           ...state.cmsCollections,
           [collectionId]: {
             ...collection,
-            items: collection.items.map(item =>
+            items: collection.items.map((item) =>
               item.id === itemId ? { ...item, ...updates } : item
-            )
-          }
-        }
+            ),
+          },
+        },
       }
     })
   },
-  
+
   removeCmsItem: (collectionId, itemId) => {
     set((state) => {
       const collection = state.cmsCollections[collectionId]
@@ -116,17 +113,17 @@ export const createCmsSlice: StateCreator<
           ...state.cmsCollections,
           [collectionId]: {
             ...collection,
-            items: collection.items.filter(item => item.id !== itemId),
+            items: collection.items.filter((item) => item.id !== itemId),
             pagination: {
               ...collection.pagination,
-              totalItems: Math.max(0, collection.pagination.totalItems - 1)
-            }
-          }
-        }
+              totalItems: Math.max(0, collection.pagination.totalItems - 1),
+            },
+          },
+        },
       }
     })
   },
-  
+
   setCmsLoading: (collectionId, loading) => {
     set((state) => {
       const collection = state.cmsCollections[collectionId]
@@ -137,13 +134,13 @@ export const createCmsSlice: StateCreator<
           ...state.cmsCollections,
           [collectionId]: {
             ...collection,
-            loading
-          }
-        }
+            loading,
+          },
+        },
       }
     })
   },
-  
+
   setCmsError: (collectionId, error) => {
     set((state) => {
       const collection = state.cmsCollections[collectionId]
@@ -154,13 +151,13 @@ export const createCmsSlice: StateCreator<
           ...state.cmsCollections,
           [collectionId]: {
             ...collection,
-            error
-          }
-        }
+            error,
+          },
+        },
       }
     })
   },
-  
+
   setCmsPagination: (collectionId, paginationUpdates) => {
     set((state) => {
       const collection = state.cmsCollections[collectionId]
@@ -173,34 +170,149 @@ export const createCmsSlice: StateCreator<
             ...collection,
             pagination: {
               ...collection.pagination,
-              ...paginationUpdates
-            }
-          }
-        }
+              ...paginationUpdates,
+            },
+          },
+        },
       }
     })
   },
-  
+
   addOptimisticOperation: (operation) => {
     set((state) => ({
-      optimisticOperations: [...state.optimisticOperations, operation]
+      optimisticOperations: [...state.optimisticOperations, operation],
     }))
   },
-  
+
   removeOptimisticOperation: (operationId) => {
     set((state) => ({
-      optimisticOperations: state.optimisticOperations.filter(op => op.id !== operationId)
+      optimisticOperations: state.optimisticOperations.filter((op) => op.id !== operationId),
     }))
   },
-  
+
   clearOptimisticOperations: (collectionId) => {
     set((state) => ({
       optimisticOperations: collectionId
-        ? state.optimisticOperations.filter(op => op.collectionId !== collectionId)
-        : []
+        ? state.optimisticOperations.filter((op) => op.collectionId !== collectionId)
+        : [],
     }))
   },
-  
+
+  selectItem: (collectionId, itemId) => {
+    set((state) => {
+      const collection = state.cmsCollections[collectionId]
+      if (!collection) return state
+
+      const newSelectedItems = new Set(collection.selectedItems)
+      newSelectedItems.add(itemId)
+
+      return {
+        cmsCollections: {
+          ...state.cmsCollections,
+          [collectionId]: {
+            ...collection,
+            selectedItems: newSelectedItems,
+          },
+        },
+      }
+    })
+  },
+
+  deselectItem: (collectionId, itemId) => {
+    set((state) => {
+      const collection = state.cmsCollections[collectionId]
+      if (!collection) return state
+
+      const newSelectedItems = new Set(collection.selectedItems)
+      newSelectedItems.delete(itemId)
+
+      return {
+        cmsCollections: {
+          ...state.cmsCollections,
+          [collectionId]: {
+            ...collection,
+            selectedItems: newSelectedItems,
+          },
+        },
+      }
+    })
+  },
+
+  selectAll: (collectionId, itemIds) => {
+    set((state) => {
+      const collection = state.cmsCollections[collectionId]
+      if (!collection) return state
+
+      return {
+        cmsCollections: {
+          ...state.cmsCollections,
+          [collectionId]: {
+            ...collection,
+            selectedItems: new Set(itemIds),
+          },
+        },
+      }
+    })
+  },
+
+  clearSelection: (collectionId) => {
+    set((state) => {
+      const collection = state.cmsCollections[collectionId]
+      if (!collection) return state
+
+      return {
+        cmsCollections: {
+          ...state.cmsCollections,
+          [collectionId]: {
+            ...collection,
+            selectedItems: new Set(),
+          },
+        },
+      }
+    })
+  },
+
+  toggleItemSelection: (collectionId, itemId) => {
+    set((state) => {
+      const collection = state.cmsCollections[collectionId]
+      if (!collection) return state
+
+      const newSelectedItems = new Set(collection.selectedItems)
+      if (newSelectedItems.has(itemId)) {
+        newSelectedItems.delete(itemId)
+      } else {
+        newSelectedItems.add(itemId)
+      }
+
+      return {
+        cmsCollections: {
+          ...state.cmsCollections,
+          [collectionId]: {
+            ...collection,
+            selectedItems: newSelectedItems,
+          },
+        },
+      }
+    })
+  },
+
+  setSelectedItems: (collectionId, itemIds) => {
+    set((state) => {
+      const collection = state.cmsCollections[collectionId]
+      if (!collection) return state
+
+      return {
+        cmsCollections: {
+          ...state.cmsCollections,
+          [collectionId]: {
+            ...collection,
+            selectedItems: new Set(itemIds),
+          },
+        },
+      }
+    })
+  },
+
   getCombinedItems: (collectionId) => {
     const state = get()
     const collection = state.cmsCollections[collectionId]
@@ -210,24 +322,24 @@ export const createCmsSlice: StateCreator<
 
     // Apply optimistic operations for this collection
     state.optimisticOperations
-      .filter(op => op.collectionId === collectionId)
-      .forEach(op => {
+      .filter((op) => op.collectionId === collectionId)
+      .forEach((op) => {
         switch (op.type) {
           case 'delete':
             if (op.itemId) {
-              items = items.filter(item => item.id !== op.itemId)
+              items = items.filter((item) => item.id !== op.itemId)
             }
             break
           case 'update':
             if (op.item && op.itemId) {
-              const index = items.findIndex(item => item.id === op.itemId)
+              const index = items.findIndex((item) => item.id === op.itemId)
               if (index !== -1) {
                 items[index] = op.item
               }
             }
             break
           case 'create':
-            if (op.item && !items.find(item => item.id === op.item?.id)) {
+            if (op.item && !items.find((item) => item.id === op.item?.id)) {
               items = [op.item, ...items]
             }
             break
@@ -235,5 +347,5 @@ export const createCmsSlice: StateCreator<
       })
 
     return items
-  }
+  },
 })

@@ -8,15 +8,15 @@
 
 import { z } from 'zod'
 
-import type { 
-  ApiKeyValidationResult, 
-  WebflowSite, 
+import type {
+  ApiKeyValidationResult,
+  WebflowSite,
   WebflowCollection,
   WebflowCmsItem,
   WebflowCmsCreateRequest,
   WebflowCmsUpdateRequest,
   WebflowCmsListOptions,
-  WebflowCmsListResponse
+  WebflowCmsListResponse,
 } from '../types/webflow'
 import { createWebflowClient } from '../webflow-client'
 
@@ -33,11 +33,11 @@ export async function validateWebflowApiKey(apiKey: string): Promise<ApiKeyValid
   try {
     // Validate input
     const validatedApiKey = apiKeySchema.parse(apiKey)
-    
+
     // Create client and validate
     const client = createWebflowClient(validatedApiKey)
     const result = await client.validateApiKey()
-    
+
     return result
   } catch (error) {
     return {
@@ -57,17 +57,17 @@ export async function getWebflowSites(apiKey: string): Promise<{
 }> {
   try {
     const validatedApiKey = apiKeySchema.parse(apiKey)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.getSites()
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         sites: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to fetch sites',
@@ -84,7 +84,7 @@ export async function getWebflowSites(apiKey: string): Promise<{
  * Get collections for a specific site
  */
 export async function getWebflowCollections(
-  apiKey: string, 
+  apiKey: string,
   siteId: string
 ): Promise<{
   success: boolean
@@ -94,17 +94,17 @@ export async function getWebflowCollections(
   try {
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedSiteId = siteIdSchema.parse(siteId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.getCollections(validatedSiteId)
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         collections: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to fetch collections',
@@ -121,7 +121,7 @@ export async function getWebflowCollections(
  * Get details for a specific site
  */
 export async function getWebflowSite(
-  apiKey: string, 
+  apiKey: string,
   siteId: string
 ): Promise<{
   success: boolean
@@ -131,17 +131,17 @@ export async function getWebflowSite(
   try {
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedSiteId = siteIdSchema.parse(siteId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.getSite(validatedSiteId)
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         site: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to fetch site details',
@@ -171,17 +171,17 @@ export async function getCmsItems(
   try {
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedCollectionId = collectionIdSchema.parse(collectionId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.getCmsItems(validatedCollectionId, options)
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         data: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to fetch CMS items',
@@ -210,17 +210,17 @@ export async function getCmsItem(
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedCollectionId = collectionIdSchema.parse(collectionId)
     const validatedItemId = itemIdSchema.parse(itemId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.getCmsItem(validatedCollectionId, validatedItemId)
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         data: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to fetch CMS item',
@@ -248,17 +248,17 @@ export async function createCmsItem(
   try {
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedCollectionId = collectionIdSchema.parse(collectionId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.createCmsItem(validatedCollectionId, data)
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         data: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to create CMS item',
@@ -288,17 +288,17 @@ export async function updateCmsItem(
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedCollectionId = collectionIdSchema.parse(collectionId)
     const validatedItemId = itemIdSchema.parse(itemId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.updateCmsItem(validatedCollectionId, validatedItemId, data)
-    
+
     if (response.success && response.data) {
       return {
         success: true,
         data: response.data,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to update CMS item',
@@ -326,16 +326,16 @@ export async function deleteCmsItem(
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedCollectionId = collectionIdSchema.parse(collectionId)
     const validatedItemId = itemIdSchema.parse(itemId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.deleteCmsItem(validatedCollectionId, validatedItemId)
-    
+
     if (response.success) {
       return {
         success: true,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to delete CMS item',
@@ -362,16 +362,16 @@ export async function publishSite(
   try {
     const validatedApiKey = apiKeySchema.parse(apiKey)
     const validatedSiteId = siteIdSchema.parse(siteId)
-    
+
     const client = createWebflowClient(validatedApiKey)
     const response = await client.publishSite(validatedSiteId, domains)
-    
+
     if (response.success) {
       return {
         success: true,
       }
     }
-    
+
     return {
       success: false,
       error: response.error?.message || 'Failed to publish site',
@@ -380,6 +380,89 @@ export async function publishSite(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to publish site',
+    }
+  }
+}
+
+/**
+ * Bulk delete CMS items
+ * Processes deletions in batches to respect API rate limits
+ */
+export async function bulkDeleteCmsItems(
+  apiKey: string,
+  collectionId: string,
+  itemIds: string[],
+  onProgress?: (completed: number, total: number) => void
+): Promise<{
+  success: boolean
+  deleted: string[]
+  failed: Array<{ itemId: string; error: string }>
+  error?: string
+}> {
+  try {
+    const validatedApiKey = apiKeySchema.parse(apiKey)
+    const validatedCollectionId = collectionIdSchema.parse(collectionId)
+
+    const client = createWebflowClient(validatedApiKey)
+    const deleted: string[] = []
+    const failed: Array<{ itemId: string; error: string }> = []
+
+    // Process in batches of 25 to avoid rate limits
+    const batchSize = 25
+    const batches = []
+    for (let i = 0; i < itemIds.length; i += batchSize) {
+      batches.push(itemIds.slice(i, i + batchSize))
+    }
+
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+      const batch = batches[batchIndex]
+
+      // Process batch items in parallel
+      const batchPromises = batch.map(async (itemId) => {
+        try {
+          const response = await client.deleteCmsItem(validatedCollectionId, itemId)
+          if (response.success) {
+            deleted.push(itemId)
+          } else {
+            failed.push({
+              itemId,
+              error: response.error?.message || 'Failed to delete item',
+            })
+          }
+        } catch (error) {
+          failed.push({
+            itemId,
+            error: error instanceof Error ? error.message : 'Failed to delete item',
+          })
+        }
+      })
+
+      await Promise.all(batchPromises)
+
+      // Report progress
+      if (onProgress) {
+        const completed = (batchIndex + 1) * batchSize
+        onProgress(Math.min(completed, itemIds.length), itemIds.length)
+      }
+
+      // Add delay between batches to respect rate limits
+      if (batchIndex < batches.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+      }
+    }
+
+    return {
+      success: failed.length === 0,
+      deleted,
+      failed,
+      error: failed.length > 0 ? `Failed to delete ${failed.length} items` : undefined,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      deleted: [],
+      failed: [],
+      error: error instanceof Error ? error.message : 'Failed to delete items',
     }
   }
 }

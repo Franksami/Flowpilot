@@ -58,6 +58,7 @@ export interface CmsCollectionState {
   error: string | null
   lastFetched: string | null
   pagination: CmsPaginationState
+  selectedItems: Set<string>
 }
 
 // Slice interfaces
@@ -93,27 +94,35 @@ export interface CmsSlice {
   activeCollection: WebflowCollection | null
   cmsCollections: Record<string, CmsCollectionState>
   optimisticOperations: OptimisticOperation[]
-  
+
   // Collection management
   setActiveCollection: (collection: WebflowCollection | null) => void
   initializeCollection: (collection: WebflowCollection) => void
-  
+
   // Item operations
   setCmsItems: (collectionId: string, items: WebflowCmsItem[], totalItems?: number) => void
   addCmsItem: (collectionId: string, item: WebflowCmsItem) => void
   updateCmsItem: (collectionId: string, itemId: string, updates: Partial<WebflowCmsItem>) => void
   removeCmsItem: (collectionId: string, itemId: string) => void
-  
+
   // State management
   setCmsLoading: (collectionId: string, loading: boolean) => void
   setCmsError: (collectionId: string, error: string | null) => void
   setCmsPagination: (collectionId: string, pagination: Partial<CmsPaginationState>) => void
-  
+
+  // Selection operations
+  selectItem: (collectionId: string, itemId: string) => void
+  deselectItem: (collectionId: string, itemId: string) => void
+  selectAll: (collectionId: string, itemIds: string[]) => void
+  clearSelection: (collectionId: string) => void
+  toggleItemSelection: (collectionId: string, itemId: string) => void
+  setSelectedItems: (collectionId: string, itemIds: string[]) => void
+
   // Optimistic updates
   addOptimisticOperation: (operation: OptimisticOperation) => void
   removeOptimisticOperation: (operationId: string) => void
   clearOptimisticOperations: (collectionId?: string) => void
-  
+
   // Computed values
   getCombinedItems: (collectionId: string) => WebflowCmsItem[]
 }
