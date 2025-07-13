@@ -1,0 +1,67 @@
+# Task ID: 4
+# Title: Setup Centralized State Management with Zustand
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Implement a modern centralized state management system using Zustand with 2025 best practices and React 19.x compatibility.
+# Details:
+Initialize Zustand with TypeScript integration and modern patterns. Create a global store with selective subscriptions, atomic updates, and proper state slicing. Implement store for current site/collection data, UI state (modals, loading, filters), user preferences, optimistic CMS updates, and command palette state. Ensure React Server Components compatibility and proper hydration consistency.
+
+# Test Strategy:
+Verify selective subscriptions minimize re-renders using React DevTools. Test state consistency across components and server/client hydration. Validate TypeScript integration and atomic state updates. Test devtools integration and persistence middleware functionality.
+
+# Subtasks:
+## 1. Initialize Zustand Store with TypeScript [pending]
+### Dependencies: None
+### Description: Set up the base Zustand store using TypeScript, ensuring type safety and compatibility with React 19.x.
+### Details:
+Create the initial store file, define the root state interface, and ensure TypeScript types are enforced throughout the store.
+
+## 2. Implement State Slicing for Modular Store Structure [pending]
+### Dependencies: 4.1
+### Description: Organize the store into logical slices (e.g., site/collection data, UI state, user preferences, command palette) for maintainability and scalability.
+### Details:
+Define separate state slices and update functions for each domain, using Zustand's recommended patterns for modular state.
+
+## 3. Enable Selective Subscriptions [pending]
+### Dependencies: 4.2
+### Description: Optimize component re-renders by allowing components to subscribe only to relevant state slices or properties.
+### Details:
+Implement selector functions and test that components only re-render when their subscribed state changes.
+
+## 4. Integrate Immer for Immutable State Updates [pending]
+### Dependencies: 4.2
+### Description: Enhance the store with Immer middleware to simplify immutable state updates and reduce boilerplate.
+### Details:
+Wrap state update functions with Immer, ensuring all mutations are handled immutably and type-safely.
+
+## 5. Set Up Zustand Devtools Middleware [pending]
+### Dependencies: 4.1
+### Description: Integrate Zustand Devtools middleware for debugging and state inspection during development.
+### Details:
+Configure the store to use the devtools middleware and verify state changes are visible in Redux DevTools.
+
+## 6. Implement Persistence Middleware [pending]
+### Dependencies: 4.2
+### Description: Add persistence middleware to save and restore relevant parts of the state (e.g., user preferences, UI state) across sessions.
+### Details:
+Configure which state slices should be persisted (e.g., to localStorage or IndexedDB) and test hydration on reload.
+
+## 7. Add Optimistic Update Patterns [pending]
+### Dependencies: 4.2, 4.4
+### Description: Implement optimistic updates for CMS actions, allowing UI to reflect changes immediately while handling rollback on failure.
+### Details:
+Design update functions that optimistically update state, trigger async actions, and revert state if the server call fails.
+
+## 8. Ensure React Server Component Compatibility [pending]
+### Dependencies: 4.1, 4.2, 4.6
+### Description: Adapt the store for compatibility with React Server Components and Next.js App Router, ensuring hydration consistency.
+### Details:
+Test store usage in server and client components, handle serialization/deserialization, and resolve hydration mismatches.
+
+## 9. Implement Atomic Update Patterns [pending]
+### Dependencies: 4.2, 4.4, 4.7
+### Description: Ensure all state updates are atomic and consistent, preventing race conditions and partial updates.
+### Details:
+Use functional updates and batching where necessary to guarantee atomicity, and write tests to verify state consistency under concurrent updates.
+

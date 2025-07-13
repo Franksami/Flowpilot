@@ -5,9 +5,9 @@
 
 import { useCallback } from 'react'
 
-import { errorHandler } from '@/lib/errors/handler'
 import { getCmsItems, createCmsItem, deleteCmsItem } from '@/lib/actions/webflow-actions'
 import { updateCmsItem as updateCmsItemAction } from '@/lib/actions/webflow-actions'
+import { errorHandler } from '@/lib/errors/handler'
 import { useCmsCollection, useCmsOperations } from '@/lib/store'
 import type { WebflowCollection, WebflowCmsItem } from '@/lib/types/webflow'
 
@@ -265,7 +265,7 @@ export function useCmsData(collection: WebflowCollection, apiKey: string | null)
   }, [fetchItems])
 
   // Get filtered optimistic operations for this collection
-  const collectionOptimisticOps = optimisticOperations.filter(op => op.collectionId === collection.id)
+  const collectionOptimisticOps = optimisticOperations.filter((op: OptimisticOperation) => op.collectionId === collection.id)
 
   return {
     // Data

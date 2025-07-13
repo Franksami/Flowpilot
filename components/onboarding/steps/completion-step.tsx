@@ -38,7 +38,7 @@ export function CompletionStep({ user, site }: CompletionStepProps) {
       {/* Success Message */}
       <div>
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          You're All Set!
+          You&apos;re All Set!
         </h3>
         <p className="text-gray-600">
           FlowPilot is now connected to your Webflow account and ready to help you manage your content.
@@ -76,7 +76,7 @@ export function CompletionStep({ user, site }: CompletionStepProps) {
 
       {/* Next Steps */}
       <div className="text-left bg-blue-50 rounded-lg p-6">
-        <h4 className="font-semibold text-blue-900 mb-3">What's Next?</h4>
+        <h4 className="font-semibold text-blue-900 mb-3">What&apos;s Next?</h4>
         <ul className="space-y-2 text-sm text-blue-800">
           <li className="flex items-start space-x-2">
             <ArrowRight className="w-4 h-4 mt-0.5 flex-shrink-0" />

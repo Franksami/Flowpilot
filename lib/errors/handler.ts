@@ -115,7 +115,7 @@ export class GlobalErrorHandler {
   private async handleHTTPError(response: Response, context?: ErrorContext): Promise<AppError> {
     const status = response.status
     let message = `HTTP ${status} error`
-    let userMessage = 'An error occurred while communicating with the server.'
+    const userMessage = 'An error occurred while communicating with the server.'
 
     try {
       const errorData = await response.json()

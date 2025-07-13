@@ -1,0 +1,49 @@
+# Task ID: 6
+# Title: Build Dashboard 'Mission Control'
+# Status: pending
+# Dependencies: 3, 5
+# Priority: medium
+# Description: Develop the home dashboard for site overview and AI suggestions.
+# Details:
+Create a dashboard page using Next.js and Shadcn/UI components. Display site stats, recently edited items, and AI content suggestions. Integrate Webflow API to fetch necessary data.
+
+# Test Strategy:
+Verify that the dashboard displays accurate site stats and recent items. Test AI suggestions for relevance and usefulness.
+
+# Subtasks:
+## 1. Design Dashboard Layout [pending]
+### Dependencies: None
+### Description: Create the foundational layout for the dashboard using Next.js and Shadcn/UI components, ensuring a responsive and modular structure with shared navigation.
+### Details:
+Implement a layout file (e.g., layout.tsx) in the /dashboard directory. Include a sidebar navigation and a main content area. Ensure the layout supports nesting and partial rendering for efficient updates.
+
+## 2. Integrate Site Stats Display [pending]
+### Dependencies: 6.1
+### Description: Develop and integrate components to display key site statistics on the dashboard, sourcing data from the Webflow API.
+### Details:
+Create a stats widget or section that fetches and displays metrics such as total pages, published items, or user activity. Ensure real-time or near-real-time updates where possible.
+
+## 3. Implement Recent Items Display [pending]
+### Dependencies: 6.1
+### Description: Add a component to show recently edited or created items, leveraging API data for dynamic updates.
+### Details:
+Fetch recent items data from the Webflow API and render them in a list or card format. Include relevant metadata such as timestamps and item types.
+
+## 4. Integrate AI Suggestions [pending]
+### Dependencies: 6.1
+### Description: Develop and embed an AI-powered suggestions module to provide content or workflow recommendations on the dashboard.
+### Details:
+Connect to the AI suggestions service or API. Display actionable recommendations, ensuring the UI is clear and the suggestions are contextually relevant.
+
+## 5. Implement API Data Fetching Logic [pending]
+### Dependencies: 6.2, 6.3, 6.4
+### Description: Set up robust data fetching mechanisms for all dashboard components, ensuring synchronization and error handling.
+### Details:
+Use Next.js data fetching methods (e.g., getServerSideProps, getStaticProps, or client-side fetching) as appropriate. Handle loading states, errors, and data refresh strategies for each widget.
+
+## 6. Test Dashboard Functionality [pending]
+### Dependencies: 6.5
+### Description: Develop and execute tests to verify the dashboard's layout, data accuracy, and feature integration.
+### Details:
+Write unit and integration tests for layout rendering, stats accuracy, recent items updates, and AI suggestions relevance. Test API error handling and UI responsiveness.
+

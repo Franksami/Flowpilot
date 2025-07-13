@@ -163,7 +163,7 @@ export function CmsItemForm({
           break
         case 'Date':
         case 'DateTime':
-          processedData[field.slug] = new Date(value).toISOString()
+          processedData[field.slug] = new Date(value as string | number | Date).toISOString()
           break
         default:
           processedData[field.slug] = value

@@ -3,6 +3,7 @@
  * Core logic for checking user permissions and access control
  */
 
+import { ROLES, hasRolePermission } from './roles'
 import type {
   Permission,
   PermissionContext,
@@ -14,7 +15,6 @@ import type {
   PermissionResource,
   CmsPermissions
 } from './types'
-import { ROLES, hasRolePermission } from './roles'
 
 // Default configuration
 const DEFAULT_CONFIG: PermissionConfig = {

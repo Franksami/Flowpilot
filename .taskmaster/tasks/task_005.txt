@@ -1,0 +1,55 @@
+# Task ID: 5
+# Title: Integrate AI Content Co-Pilot
+# Status: pending
+# Dependencies: 3, 4
+# Priority: medium
+# Description: Integrate Claude AI for content generation and tone matching.
+# Details:
+Use Claude API to implement content generation features. Develop the 'Ask AI' feature with options for tone matching. Ensure AI-generated content can be inserted into CMS fields. Implement descriptive alt-text generation for images.
+
+# Test Strategy:
+Test AI content generation with various prompts and tone settings. Validate that AI suggestions are contextually relevant and correctly inserted into CMS fields.
+
+# Subtasks:
+## 1. Integrate Claude API for Content Generation [pending]
+### Dependencies: None
+### Description: Set up secure communication with the Claude API, manage API keys, and implement basic request/response handling for content generation.
+### Details:
+Obtain and securely store the Claude API key. Use the official SDK or HTTP requests to connect to the Claude API, ensuring environment variables are used for key management. Implement basic message sending and response parsing using the Messages API endpoint.
+
+## 2. Develop Prompt Engineering Framework [pending]
+### Dependencies: 5.1
+### Description: Design and implement a system for constructing, templating, and managing prompts sent to the Claude API, supporting various content generation scenarios.
+### Details:
+Create reusable prompt templates for different content types (e.g., articles, alt-text, summaries). Allow dynamic insertion of context, user input, and tone instructions. Ensure prompts are structured for optimal Claude output.
+
+## 3. Implement Tone Matching Logic [pending]
+### Dependencies: 5.2
+### Description: Build logic to adjust prompts and/or post-process AI responses to match user-selected or contextually appropriate tones.
+### Details:
+Define supported tones (e.g., formal, conversational, playful). Modify prompt templates or system instructions to guide Claude's output style. Optionally, implement post-processing to further refine tone consistency.
+
+## 4. Design and Build 'Ask AI' UI Component [pending]
+### Dependencies: 5.3
+### Description: Create a user interface for the 'Ask AI' feature, allowing users to input queries, select tone, and view AI-generated content.
+### Details:
+Develop a React component with input fields for user queries, tone selection dropdown, and a display area for AI responses. Integrate loading states, error handling, and accessibility features.
+
+## 5. Enable CMS Field Insertion for AI Content [pending]
+### Dependencies: 5.4
+### Description: Implement functionality to insert AI-generated content directly into CMS fields, supporting both manual and automated workflows.
+### Details:
+Map AI output to corresponding CMS fields. Provide UI controls for users to review and insert content. Ensure compatibility with the CMS data model and validation rules.
+
+## 6. Automate Descriptive Alt-Text Generation [pending]
+### Dependencies: 5.1, 5.2
+### Description: Leverage Claude API to generate descriptive alt-text for images, integrating with image upload or editing workflows.
+### Details:
+Design prompts specifically for alt-text generation. Trigger alt-text requests on image upload or edit events. Insert generated alt-text into the appropriate CMS/image metadata fields.
+
+## 7. Validate and Test AI Output [pending]
+### Dependencies: 5.5, 5.6
+### Description: Develop and execute a comprehensive validation and testing strategy for all AI-generated content, ensuring contextual relevance, tone accuracy, and safe insertion into CMS.
+### Details:
+Create test cases for various prompt/tone combinations. Validate output for relevance, tone, and safety. Test CMS insertion workflows and alt-text generation. Collect feedback and iterate on prompt engineering and tone logic as needed.
+

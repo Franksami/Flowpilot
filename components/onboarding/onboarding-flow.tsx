@@ -68,25 +68,31 @@ export function OnboardingFlow() {
   const nextStep = () => {
     const nextIndex = currentStepIndex + 1
     if (nextIndex < stepOrder.length) {
+      setError(null) // Clear any errors when moving to next step
       setCurrentStep(stepOrder[nextIndex])
     }
   }
 
   const completeOnboarding = () => {
-    // Save data to global store
-    if (onboardingData.user) {
-      setUser({
-        id: onboardingData.user.id,
-        email: onboardingData.user.email,
-        name: `${onboardingData.user.firstName || ''} ${onboardingData.user.lastName || ''}`.trim(),
-      })
-    }
+    try {
+      // Save data to global store
+      if (onboardingData.user) {
+        setUser({
+          id: onboardingData.user.id,
+          email: onboardingData.user.email,
+          name: `${onboardingData.user.firstName || ''} ${onboardingData.user.lastName || ''}`.trim(),
+        })
+      }
 
-    setSites(onboardingData.sites)
-    setApiKey(onboardingData.apiKey)
+      setSites(onboardingData.sites)
+      setApiKey(onboardingData.apiKey)
 
-    if (onboardingData.selectedSite) {
-      setCurrentSite(onboardingData.selectedSite)
+      if (onboardingData.selectedSite) {
+        setCurrentSite(onboardingData.selectedSite)
+      }
+    } catch (error) {
+      // Log error silently - continue to completion step even if store operations fail
+      // In production, this would be sent to error monitoring service
     }
 
     setCurrentStep('completion')

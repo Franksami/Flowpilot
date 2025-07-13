@@ -100,7 +100,7 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
   const filteredItems = useMemo(() => {
     if (!searchQuery) return items
 
-    return items.filter((item) => {
+    return items.filter((item: WebflowCmsItem) => {
       // Search across all field values
       const searchableText = Object.values(item.fieldData)
         .map((value) => String(value || '').toLowerCase())
@@ -282,7 +282,7 @@ export function CmsDataTable({ collection }: CmsDataTableProps) {
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedItems.map((item) => {
+                paginatedItems.map((item: WebflowCmsItem) => {
                   const operationStatus = getItemOperationStatus(item.id)
                   const isOptimistic = isOptimisticItem(item.id)
 

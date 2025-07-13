@@ -1,0 +1,61 @@
+# Task ID: 2
+# Title: Implement Onboarding & Secure Connection
+# Status: done
+# Dependencies: 1
+# Priority: medium
+# Description: Develop the onboarding process for API key input and secure storage using modern 2025 security best practices.
+# Details:
+Create a multi-step onboarding UI using Shadcn/UI components with secure API key handling. Implement server-side API proxy pattern using Next.js API routes/server actions to prevent client-side API key exposure. Use HTTP-only cookies for token storage (preferred) or encrypted localStorage as fallback. Implement comprehensive API key validation, token expiry logic, and secure connection testing through server-side proxy. Add XSS protection, input sanitization, and strict CSP headers.
+
+# Test Strategy:
+Test onboarding flow with valid and invalid API keys through server-side validation. Verify secure token storage (HTTP-only cookies or encrypted localStorage). Test API proxy functionality and token refresh logic. Validate XSS protection and CSP implementation. Ensure no API keys are exposed in client bundle or network requests.
+
+# Subtasks:
+## 1. Design UI Flow for Secure Onboarding [done]
+### Dependencies: None
+### Description: Create detailed wireframes and user flows for the onboarding process, ensuring each step (API key input, validation, confirmation) is clear and secure.
+### Details:
+Use Shadcn/UI components to design a multi-step onboarding interface. Include clear instructions for API key entry and feedback for validation errors. Ensure the flow prevents accidental exposure of sensitive data.
+
+## 2. Implement Input Validation and Sanitization [done]
+### Dependencies: 2.1
+### Description: Develop robust client-side and server-side validation for API key input, including input sanitization to prevent XSS and injection attacks.
+### Details:
+Validate API key format and length on the client. On the server, sanitize and re-validate input before processing. Reject malformed or suspicious input and provide user feedback.
+
+## 3. Develop API Proxy Layer Using Next.js [done]
+### Dependencies: 2.2
+### Description: Set up a secure API proxy using Next.js API routes to handle all external API requests, preventing direct client access to sensitive endpoints.
+### Details:
+Implement proxy endpoints that forward requests to external APIs, inject authorization headers from secure storage, and handle response transformation. Ensure environment variables are not exposed to the client[1][2][3][4].
+
+## 4. Implement Secure Token Storage [done]
+### Dependencies: 2.3
+### Description: Store API tokens securely using HTTP-only cookies as the primary method, with encrypted localStorage as a fallback.
+### Details:
+Configure server to set HTTP-only cookies for tokens. If cookies are unavailable, encrypt tokens with a library like CryptoJS before storing in localStorage. Ensure decryption only occurs server-side or in secure contexts.
+
+## 5. Implement Token Refresh Logic [done]
+### Dependencies: 2.4
+### Description: Develop logic to detect token expiry and securely refresh tokens via the proxy, updating storage as needed.
+### Details:
+Monitor token expiry on both client and server. When expired, trigger a secure refresh flow through the API proxy, updating the HTTP-only cookie or encrypted storage with the new token.
+
+## 6. Configure CSP and Security Headers [done]
+### Dependencies: 2.5
+### Description: Set strict Content Security Policy (CSP) and other security headers to protect against XSS and related attacks.
+### Details:
+Update Next.js server configuration to include CSP, X-Frame-Options, X-Content-Type-Options, and other recommended headers. Test header effectiveness using security scanning tools.
+
+## 7. Implement Comprehensive Error Handling [done]
+### Dependencies: None
+### Description: Add robust error handling for all onboarding and proxy operations, ensuring sensitive information is never leaked.
+### Details:
+Handle validation, network, and API errors gracefully. Display user-friendly messages and log technical details securely on the server. Ensure error responses never include sensitive data.
+
+## 8. Conduct End-to-End Onboarding and Security Testing [done]
+### Dependencies: None
+### Description: Test the entire onboarding flow, including all security measures, with valid and invalid inputs to ensure robustness.
+### Details:
+Perform manual and automated tests covering UI flow, input validation, proxy behavior, token storage, refresh logic, security headers, and error handling. Validate that no API keys or tokens are exposed in client-side code or network traffic.
+

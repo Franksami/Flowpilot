@@ -38,6 +38,7 @@ export interface WebflowCollection {
 export interface WebflowField {
   id: string
   name: string
+  displayName?: string
   slug: string
   type: string
   required: boolean
@@ -46,7 +47,7 @@ export interface WebflowField {
 }
 
 export interface WebflowUser {
-  id: string
+  id?: string
   email: string
   firstName?: string
   lastName?: string
@@ -64,10 +65,10 @@ export interface ApiKeyValidationResult {
 export interface WebflowCmsItem {
   id: string
   cmsLocaleId?: string
-  lastPublished?: string
+  lastPublished?: string | null
   lastUpdated: string
   createdOn: string
-  publishedOn?: string
+  publishedOn?: string | null
   isArchived: boolean
   isDraft: boolean
   fieldData: Record<string, any>
