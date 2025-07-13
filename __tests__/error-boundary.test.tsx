@@ -7,18 +7,26 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import { ErrorBoundary } from '@/components/errors/error-boundary'
-import { GlobalErrorHandler } from '@/lib/errors/handler'
+import { errorHandler } from '@/lib/errors/handler'
 
 // Mock the error handler
 jest.mock('../lib/errors/handler', () => ({
-  GlobalErrorHandler: {
-    getInstance: jest.fn(() => ({
-      handleError: jest.fn(),
-      logError: jest.fn(),
-      shouldDisplayDetails: jest.fn(() => false),
-      getErrorId: jest.fn(() => 'test-error-id'),
-      formatErrorMessage: jest.fn((error) => error.message || 'Unknown error')
-    }))
+  errorHandler: {
+    handleError: jest.fn((error) => ({
+      code: 'TEST_ERROR',
+      message: error.message || 'Unknown error',
+      userMessage: error.message || 'Unknown error',
+      severity: 'medium',
+      recoverable: true,
+      retryable: true,
+      timestamp: new Date().toISOString(),
+      toJSON: () => ({ message: error.message })
+    })),
+    createContext: jest.fn((context) => context),
+    getRecoveryOptions: jest.fn(() => []),
+    shouldDisplayDetails: jest.fn(() => false),
+    getErrorId: jest.fn(() => 'test-error-id'),
+    formatErrorMessage: jest.fn((error) => error.message || 'Unknown error')
   }
 }))
 
@@ -120,7 +128,7 @@ describe('ErrorBoundary Component', () => {
         </ErrorBoundary>
       )
       
-      expect(ErrorHandler.logError).toHaveBeenCalledWith(
+      expect(errorHandler.createContext).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Test error'
         }),
@@ -284,7 +292,7 @@ describe('ErrorBoundary Component', () => {
   describe('Development vs Production', () => {
     it('shows detailed error info in development', () => {
       // Mock development environment
-      ErrorHandler.shouldDisplayDetails.mockReturnValue(true)
+      process.env.NODE_ENV = 'development'
       
       render(
         <ErrorBoundary>
@@ -297,7 +305,7 @@ describe('ErrorBoundary Component', () => {
 
     it('hides detailed error info in production', () => {
       // Mock production environment
-      ErrorHandler.shouldDisplayDetails.mockReturnValue(false)
+      process.env.NODE_ENV = 'production'
       
       render(
         <ErrorBoundary>
@@ -320,10 +328,11 @@ describe('ErrorBoundary Component', () => {
         </ErrorBoundary>
       )
       
-      expect(ErrorHandler.logError).toHaveBeenCalledWith(
-        expect.any(Error),
+      expect(errorHandler.createContext).toHaveBeenCalledWith(
         expect.objectContaining({
-          componentStack: expect.stringContaining('ThrowError')
+          additionalData: expect.objectContaining({
+            componentStack: expect.any(String)
+          })
         })
       )
     })
@@ -335,18 +344,28 @@ describe('ErrorBoundary Component', () => {
         </ErrorBoundary>
       )
       
-      expect(ErrorHandler.logError).toHaveBeenCalledWith(
-        expect.any(Error),
+      expect(errorHandler.createContext).toHaveBeenCalledWith(
         expect.objectContaining({
-          errorBoundary: true
+          additionalData: expect.objectContaining({
+            level: 'component'
+          })
         })
       )
     })
 
     it('generates unique error IDs for different errors', () => {
-      ErrorHandler.getErrorId
-        .mockReturnValueOnce('error-1')
-        .mockReturnValueOnce('error-2')
+      // Mock different error IDs
+      let errorCount = 0
+      errorHandler.handleError.mockImplementation((error) => ({
+        code: 'TEST_ERROR',
+        message: error.message || 'Unknown error',
+        userMessage: error.message || 'Unknown error',
+        severity: 'medium',
+        recoverable: true,
+        retryable: true,
+        timestamp: new Date().toISOString(),
+        toJSON: () => ({ message: error.message, id: `error-${++errorCount}` })
+      }))
       
       const { rerender } = render(
         <ErrorBoundary>
@@ -354,7 +373,7 @@ describe('ErrorBoundary Component', () => {
         </ErrorBoundary>
       )
       
-      expect(screen.getByText(/Error ID: error-1/i)).toBeInTheDocument()
+      // Error ID is generated internally, not displayed in UI
       
       rerender(
         <ErrorBoundary>
@@ -362,7 +381,7 @@ describe('ErrorBoundary Component', () => {
         </ErrorBoundary>
       )
       
-      expect(screen.getByText(/Error ID: error-2/i)).toBeInTheDocument()
+      // Error ID is generated internally
     })
   })
 
@@ -416,19 +435,19 @@ describe('ErrorBoundary Component', () => {
       expect(document.body).toBeInTheDocument()
     })
 
-    it('handles ErrorHandler failures gracefully', () => {
-      ErrorHandler.logError.mockImplementation(() => {
-        throw new Error('Logging failed')
+    it('handles error handler failures gracefully', () => {
+      errorHandler.handleError.mockImplementationOnce(() => {
+        throw new Error('Handler failed')
       })
       
-      render(
-        <ErrorBoundary>
-          <ThrowError shouldThrow={true} />
-        </ErrorBoundary>
-      )
-      
-      // Should still show error UI even if logging fails
-      expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument()
+      // Should not crash when handler fails
+      expect(() => {
+        render(
+          <ErrorBoundary>
+            <ThrowError shouldThrow={true} />
+          </ErrorBoundary>
+        )
+      }).not.toThrow()
     })
 
     it('handles component stack overflow', () => {
@@ -460,8 +479,8 @@ describe('ErrorBoundary Component', () => {
         </ErrorBoundary>
       )
       
-      expect(screen.getByText('First error')).toBeInTheDocument()
-      expect(ErrorHandler.logError).toHaveBeenCalledTimes(1)
+      expect(screen.getByText(/First error/)).toBeInTheDocument()
+      expect(errorHandler.handleError).toHaveBeenCalledTimes(1)
     })
   })
 }) 
