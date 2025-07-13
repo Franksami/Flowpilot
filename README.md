@@ -1,36 +1,166 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlowPilot
 
-## Getting Started
+AI-powered FlowPilot: Professional Webflow CMS management application
 
-First, run the development server:
+## 🚀 Quick Start
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Prerequisites
+
+- Node.js 18.x or 20.x
+- npm or yarn
+- Git
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/Franksami/Flowpilot.git
+   cd Flowpilot
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 🏗️ Tech Stack
+
+- **Framework**: Next.js 15.3.5 with App Router
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS 4.x with JIT compilation
+- **State Management**: Zustand with persistence
+- **UI Components**: Shadcn/UI with Radix primitives
+- **Forms**: React Hook Form with Zod validation
+- **Security**: HTTP-only cookies, encrypted localStorage, CSP headers
+- **Development**: ESLint, Prettier, Husky pre-commit hooks
+
+## 📁 Project Structure
+
+```
+├── app/                    # Next.js App Router pages
+├── components/            # React components
+│   ├── onboarding/       # Onboarding flow components
+│   └── ui/               # Reusable UI components
+├── lib/                  # Utilities and core logic
+│   ├── actions/          # Next.js Server Actions
+│   ├── auth/             # Authentication utilities
+│   ├── store/            # Zustand state management
+│   └── types/            # TypeScript type definitions
+├── .github/workflows/    # CI/CD pipelines
+└── .taskmaster/         # Task management system
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔐 Security Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Server-side API proxy** - No client-side API key exposure
+- **Secure token storage** - HTTP-only cookies with encrypted localStorage fallback
+- **Input validation** - Zod schemas for all user inputs
+- **CSP headers** - Content Security Policy protection
+- **XSS protection** - Input sanitization and secure headers
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Available Scripts
 
-## Learn More
+```bash
+npm run dev          # Start development server with Turbopack
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run lint:fix     # Fix ESLint issues
+npm run format       # Format code with Prettier
+npm run type-check   # Run TypeScript type checking
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🧪 Development Workflow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Code Quality**: Pre-commit hooks ensure code quality
+2. **Type Safety**: TypeScript strict mode catches errors early
+3. **Testing**: Build verification and linting on every commit
+4. **CI/CD**: GitHub Actions pipeline for automated checks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📊 TaskMaster Integration
 
-## Deploy on Vercel
+This project uses TaskMaster for project management:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Check current tasks
+task-master list
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Get next task to work on
+task-master next
+
+# Mark task as complete
+task-master set-status --id=<task-id> --status=done
+```
+
+## 🔗 External Integrations
+
+- **Webflow API**: Secure server-side integration
+- **GitHub Actions**: Automated CI/CD pipeline
+- **Vercel/Netlify**: Deployment ready
+
+## 📝 Environment Variables
+
+Required environment variables (see `.env.example`):
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-here
+ENCRYPTION_KEY=your-32-character-key
+WEBFLOW_BASE_URL=https://api.webflow.com/v2
+```
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+### Docker
+
+```bash
+docker build -t flowpilot .
+docker run -p 3000:3000 flowpilot
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Check the `/docs` directory
+- **Issues**: Open an issue on GitHub
+- **TaskMaster Help**: Run `task-master help` in the project directory
+
+---
+
+Built with ❤️ for modern web development
