@@ -1,0 +1,538 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository",
+        "description": "Initialize the Git repository and configure the project structure for FlowPilot using modern 2025 best practices.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "Create a new GitHub repository for FlowPilot. Initialize the project using Next.js 14.x with App Router and TypeScript support. Set up the modern project structure with /app directory routing, implement proper security configurations, and configure GitHub Actions for CI/CD pipeline. Use current tech stack including React 19.x with Server Components, Tailwind CSS 4.x with JIT compiler, and Zustand for state management.",
+        "testStrategy": "Verify that the repository is accessible, the project builds successfully with Next.js 14.x and App Router, TypeScript compiles without errors in strict mode, Tailwind CSS JIT compilation works correctly, ESLint and Prettier configurations are functional, environment variables are properly configured, and CI/CD pipeline triggers on commits.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create GitHub repository and initialize Next.js 14.x project",
+            "description": "Set up GitHub repository and initialize with Next.js 14.x using App Router",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Configure modern project structure with /app directory",
+            "description": "Set up /app directory structure with layout.js, page.js, error.js, loading.js patterns and component colocation",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Install and configure TypeScript in strict mode",
+            "description": "Set up TypeScript with strict mode configuration for enhanced type safety",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Set up Tailwind CSS 4.x with JIT compiler",
+            "description": "Install Tailwind CSS 4.x, configure content array for JIT compilation, and optimize for single CSS bundle",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Install and configure Zustand for state management",
+            "description": "Set up Zustand as the state management solution with proper TypeScript integration",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Configure Next.js optimizations",
+            "description": "Set up next/font and next/image optimization for performance",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Set up code quality tools",
+            "description": "Configure ESLint and Prettier for consistent code formatting and quality",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Configure environment variables structure",
+            "description": "Set up proper environment variable structure with NEXT_PUBLIC_ for client-side and unprefixed for server-side variables",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 9,
+            "title": "Implement security configurations",
+            "description": "Configure CSP headers for XSS protection and ensure API keys are never exposed in client bundle",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 10,
+            "title": "Initialize Git with proper .gitignore",
+            "description": "Set up Git repository with Next.js-specific .gitignore file",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 11,
+            "title": "Configure GitHub Actions CI/CD pipeline",
+            "description": "Set up automated CI/CD pipeline for building, testing, and deployment",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement Onboarding & Secure Connection",
+        "description": "Develop the onboarding process for API key input and secure storage using modern 2025 security best practices.",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "medium",
+        "details": "Create a multi-step onboarding UI using Shadcn/UI components with secure API key handling. Implement server-side API proxy pattern using Next.js API routes/server actions to prevent client-side API key exposure. Use HTTP-only cookies for token storage (preferred) or encrypted localStorage as fallback. Implement comprehensive API key validation, token expiry logic, and secure connection testing through server-side proxy. Add XSS protection, input sanitization, and strict CSP headers.",
+        "testStrategy": "Test onboarding flow with valid and invalid API keys through server-side validation. Verify secure token storage (HTTP-only cookies or encrypted localStorage). Test API proxy functionality and token refresh logic. Validate XSS protection and CSP implementation. Ensure no API keys are exposed in client bundle or network requests.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create server-side API proxy for Webflow API calls",
+            "description": "Implement Next.js API routes to proxy all Webflow API requests, preventing client-side API key exposure",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement secure token storage system",
+            "description": "Create HTTP-only cookie storage for API tokens with encrypted localStorage fallback, including token validation and expiry logic",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Build secure onboarding UI components",
+            "description": "Create multi-step onboarding flow using Shadcn/UI with input sanitization, XSS protection, and proper error handling",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement API key validation through server actions",
+            "description": "Create Next.js server actions for secure API key validation with test calls to Webflow API",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Add security headers and CSP configuration",
+            "description": "Implement strict Content Security Policy and security headers to prevent XSS attacks and secure the application",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Create token refresh and management system",
+            "description": "Implement automatic token validation, refresh logic, and secure session management",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Develop Dynamic CMS Hub",
+        "description": "Create the CMS hub for viewing and managing Webflow CMS items.",
+        "details": "Use Next.js pages to create a CMS hub interface. Implement paginated and searchable tables using Shadcn/UI components. Integrate Webflow API to fetch and display CMS items. Implement Optimistic UI updates for create, update, and delete operations.",
+        "testStrategy": "Test the CMS hub with various collections to ensure items are displayed, searchable, and CRUD operations reflect immediately in the UI.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Setup Centralized State Management with Zustand",
+        "description": "Implement a modern centralized state management system using Zustand with 2025 best practices and React 19.x compatibility.",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "medium",
+        "details": "Initialize Zustand with TypeScript integration and modern patterns. Create a global store with selective subscriptions, atomic updates, and proper state slicing. Implement store for current site/collection data, UI state (modals, loading, filters), user preferences, optimistic CMS updates, and command palette state. Ensure React Server Components compatibility and proper hydration consistency.",
+        "testStrategy": "Verify selective subscriptions minimize re-renders using React DevTools. Test state consistency across components and server/client hydration. Validate TypeScript integration and atomic state updates. Test devtools integration and persistence middleware functionality.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Install and configure Zustand with TypeScript",
+            "description": "Set up Zustand with proper TypeScript integration and modern configuration",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create core store structure with state slicing",
+            "description": "Implement main store with separate slices for site data, UI state, user preferences, and command palette state",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement selective subscription patterns",
+            "description": "Create selector functions to minimize re-renders and ensure components only subscribe to relevant state changes",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Add immer integration for complex state mutations",
+            "description": "Configure immer middleware for handling complex nested state updates safely and immutably",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement devtools and persistence middleware",
+            "description": "Add Redux DevTools integration for debugging and persistence middleware for user preferences",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Create optimistic update patterns for CMS operations",
+            "description": "Implement optimistic UI updates for CMS operations with proper rollback mechanisms",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Ensure React Server Components compatibility",
+            "description": "Configure store for proper hydration and compatibility with React Server Components",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Implement atomic state update patterns",
+            "description": "Create action patterns that prevent race conditions and ensure consistent state updates",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Integrate AI Content Co-Pilot",
+        "description": "Integrate Claude AI for content generation and tone matching.",
+        "details": "Use Claude API to implement content generation features. Develop the 'Ask AI' feature with options for tone matching. Ensure AI-generated content can be inserted into CMS fields. Implement descriptive alt-text generation for images.",
+        "testStrategy": "Test AI content generation with various prompts and tone settings. Validate that AI suggestions are contextually relevant and correctly inserted into CMS fields.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Build Dashboard 'Mission Control'",
+        "description": "Develop the home dashboard for site overview and AI suggestions.",
+        "details": "Create a dashboard page using Next.js and Shadcn/UI components. Display site stats, recently edited items, and AI content suggestions. Integrate Webflow API to fetch necessary data.",
+        "testStrategy": "Verify that the dashboard displays accurate site stats and recent items. Test AI suggestions for relevance and usefulness.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Command Palette",
+        "description": "Develop a command palette for quick navigation and actions.",
+        "details": "Use Shadcn/UI to create a command palette accessible via `Cmd+K`. Implement search and navigation for CMS collections. Add actions for creating new items and publishing sites.",
+        "testStrategy": "Test command palette functionality for navigation and action execution. Ensure keyboard shortcuts trigger the correct actions.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Enhance Pro Workflow with Keyboard Shortcuts",
+        "description": "Add keyboard shortcuts for enhanced user workflow.",
+        "details": "Implement keyboard shortcuts using JavaScript event listeners. Add shortcuts like `Cmd+S` for saving items and other common actions. Ensure compatibility with different browsers.",
+        "testStrategy": "Test all keyboard shortcuts in various browsers to ensure they trigger the intended actions without conflicts.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Integrate Professional WYSIWYG Editor",
+        "description": "Implement TipTap editor for Rich Text fields.",
+        "details": "Integrate TipTap as the WYSIWYG editor for Rich Text fields in the CMS hub. Customize the editor to match the application's styling and functionality needs.",
+        "testStrategy": "Test the editor for all Rich Text field operations. Ensure compatibility with Webflow's field types and seamless user experience.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Site Publishing Controls",
+        "description": "Develop controls for publishing sites with real-time status feedback.",
+        "details": "Create a UI for site publishing using Shadcn/UI components. Integrate Webflow API to trigger site publishing and provide real-time feedback on status.",
+        "testStrategy": "Test site publishing functionality and ensure real-time feedback is accurate and informative.",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Optimize Performance with Next.js Features",
+        "description": "Enhance application performance using Next.js 14.x optimization features and Core Web Vitals optimization.",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "medium",
+        "details": "Implement Next.js 14.x performance features including React Server Components, static generation with generateStaticParams, enhanced data fetching with built-in memoization, and Turbopack support. Focus on Core Web Vitals optimization (LCP, INP, CLS) with proper loading states, Suspense boundaries, and optimistic UI patterns.",
+        "testStrategy": "Measure Core Web Vitals (LCP, INP, CLS) before and after optimizations using tools like Lighthouse and Web Vitals extension. Conduct bundle analysis to verify JavaScript reduction. Test loading states and Suspense boundaries for improved UX. Ensure static generation works correctly with generateStaticParams.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement React Server Components",
+            "description": "Convert appropriate components to React Server Components to reduce client-side JavaScript bundle size",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Set up static generation with generateStaticParams",
+            "description": "Implement generateStaticParams for static page generation and generateMetadata for optimized metadata",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Optimize data fetching with built-in memoization",
+            "description": "Implement enhanced data fetching patterns using Next.js 14.x built-in memoization and server-side data fetching",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Configure Turbopack for optimized bundling",
+            "description": "Enable and configure Turbopack support for faster builds and optimized bundling",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement advanced lazy loading and dynamic imports",
+            "description": "Set up code splitting with dynamic imports and lazy loading for components to improve initial load times",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Optimize images and fonts with next/image and next/font",
+            "description": "Implement next/image for optimized image loading and next/font for font optimization to improve LCP",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Implement Core Web Vitals monitoring",
+            "description": "Set up monitoring for LCP, INP, and CLS metrics with proper measurement and reporting",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Add loading states and skeleton UIs",
+            "description": "Implement proper loading states and skeleton UIs to minimize CLS and improve perceived performance",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 9,
+            "title": "Set up Suspense boundaries",
+            "description": "Implement Suspense boundaries for better UX during data loading and component rendering",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 10,
+            "title": "Implement optimistic UI patterns",
+            "description": "Add optimistic UI updates for better perceived performance during user interactions",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 11,
+            "title": "Conduct bundle analysis and optimization",
+            "description": "Analyze bundle size and optimize by removing unused code and implementing proper code splitting",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Implement Secure Local Storage for API Key",
+        "description": "Enhance security for storing API keys in local storage.",
+        "details": "Use encryption libraries like CryptoJS to encrypt the API key before storing it in local storage. Ensure decryption occurs only when necessary for API calls.",
+        "testStrategy": "Test encryption and decryption processes to ensure the API key remains secure and accessible only when needed.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Develop Testing Suite for Application",
+        "description": "Create a comprehensive testing suite for FlowPilot.",
+        "details": "Set up testing frameworks like Jest and React Testing Library. Develop unit and integration tests for all components and features. Ensure coverage for edge cases and potential failure points.",
+        "testStrategy": "Run the testing suite to ensure all tests pass. Verify coverage reports for completeness and accuracy.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement UI/UX Enhancements",
+        "description": "Polish the user interface and experience for a professional feel.",
+        "details": "Refine UI components using Tailwind CSS for styling. Implement micro-interactions and animations to enhance user experience. Ensure accessibility standards are met.",
+        "testStrategy": "Conduct user testing sessions to gather feedback on UI/UX. Make iterative improvements based on feedback and best practices.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Prepare Documentation and User Guides",
+        "description": "Develop comprehensive documentation and user guides for FlowPilot.",
+        "details": "Create user guides and documentation using tools like Docusaurus. Include setup instructions, feature overviews, and troubleshooting tips. Ensure documentation is clear and accessible.",
+        "testStrategy": "Review documentation for accuracy and completeness. Conduct usability testing to ensure guides are helpful and easy to follow.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-13T07:16:10.515Z",
+      "updated": "2025-07-13T07:39:14.701Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
